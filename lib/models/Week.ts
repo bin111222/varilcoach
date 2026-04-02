@@ -67,13 +67,16 @@ const ExerciseSchema = new Schema<IExercise>({
   optional: { type: Boolean, default: false },
 });
 
-const DrillSchema = new Schema<IDrill>({
-  name: { type: String, required: true },
-  volume: { type: String, required: true },
-  cue: { type: String, required: true },
-  isNew: { type: Boolean, default: false },
-  highlight: { type: Boolean, default: false },
-});
+const DrillSchema = new Schema<IDrill>(
+  {
+    name: { type: String, required: true },
+    volume: { type: String, required: true },
+    cue: { type: String, required: true },
+    isNew: { type: Boolean, default: false },
+    highlight: { type: Boolean, default: false },
+  },
+  { suppressReservedKeysWarning: true }
+);
 
 const RunIntervalSchema = new Schema<IRunInterval>({
   label: { type: String, required: true },
