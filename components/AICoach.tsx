@@ -116,7 +116,7 @@ export default function AICoach() {
           <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "18px", letterSpacing: "2px", color: "var(--accent)" }}>
             AI COACH
           </div>
-          <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase", color: "var(--muted)" }}>
+          <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "15px", letterSpacing: "2px", textTransform: "uppercase", color: "var(--muted)" }}>
             GPT-4o · Knows your programme
           </div>
         </div>
@@ -137,7 +137,7 @@ export default function AICoach() {
             <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "32px", color: "#222", letterSpacing: "3px", marginBottom: "12px" }}>
               READY
             </div>
-            <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "12px", color: "var(--muted)", letterSpacing: "2px", marginBottom: "24px" }}>
+            <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "14px", color: "var(--muted)", letterSpacing: "2px", marginBottom: "24px" }}>
               Ask about your programme, recovery, form, or adjustments.
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
@@ -152,7 +152,7 @@ export default function AICoach() {
                     padding: "10px 16px",
                     textAlign: "left",
                     color: "var(--text2)",
-                    fontSize: "12px",
+                    fontSize: "14px",
                     cursor: "pointer",
                     transition: "all 0.15s",
                     fontFamily: "'DM Sans', sans-serif",
@@ -235,7 +235,7 @@ export default function AICoach() {
                         <code
                           style={{
                             fontFamily: "'DM Mono', monospace",
-                            fontSize: "12px",
+                            fontSize: "14px",
                             background: "rgba(200,245,66,0.08)",
                             border: "1px solid rgba(200,245,66,0.18)",
                             padding: "1px 6px",
@@ -257,7 +257,7 @@ export default function AICoach() {
             </div>
             <div style={{
               fontFamily: "'DM Mono', monospace",
-              fontSize: "11px",
+              fontSize: "15px",
               color: "var(--muted)",
               letterSpacing: "1px",
               marginTop: "4px",
@@ -302,7 +302,7 @@ export default function AICoach() {
             padding: "12px 16px",
             borderRadius: "2px",
             fontFamily: "'DM Mono', monospace",
-            fontSize: "11px",
+            fontSize: "15px",
             color: "var(--mma)",
             letterSpacing: "1px",
           }}>
@@ -334,7 +334,7 @@ export default function AICoach() {
               flex: 1,
               resize: "none",
               padding: "10px 14px",
-              fontSize: "13px",
+              fontSize: "15px",
               lineHeight: "1.5",
               opacity: loading ? 0.6 : 1,
             }}
@@ -359,7 +359,7 @@ export default function AICoach() {
         </div>
         <div style={{
           fontFamily: "'DM Mono', monospace",
-          fontSize: "11px",
+          fontSize: "15px",
           color: "var(--muted)",
           letterSpacing: "1px",
         }}>

@@ -81,7 +81,7 @@ export default function ProgressPage() {
         <h1 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "56px", lineHeight: "0.9", letterSpacing: "2px" }}>
           PROGRESS <span style={{ color: "var(--accent)" }}>LOG</span>
         </h1>
-        <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "12px", letterSpacing: "2px", textTransform: "uppercase", color: "var(--muted)", marginTop: "10px" }}>
+        <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "14px", letterSpacing: "2px", textTransform: "uppercase", color: "var(--muted)", marginTop: "10px" }}>
           {logs.length} sessions logged
         </div>
       </div>
@@ -98,7 +98,7 @@ export default function ProgressPage() {
             ].map((stat, i) => (
               <div key={i} style={{ background: "var(--surface)", border: "1px solid var(--border)", padding: "20px", borderRadius: "2px", position: "relative", overflow: "hidden" }}>
                 <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "2px", background: "var(--accent)" }} />
-                <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "9px", letterSpacing: "2px", textTransform: "uppercase", color: "var(--muted)", marginBottom: "8px" }}>{stat.label}</div>
+                <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "15px", letterSpacing: "2px", textTransform: "uppercase", color: "var(--muted)", marginBottom: "8px" }}>{stat.label}</div>
                 <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "40px", color: "var(--accent)", lineHeight: "1" }}>
                   {stat.value}<span style={{ fontSize: "18px", color: "var(--muted)" }}>{stat.sub}</span>
                 </div>
@@ -109,7 +109,7 @@ export default function ProgressPage() {
 
         {/* Filters */}
         <div style={{ display: "flex", gap: "12px", marginBottom: "24px", alignItems: "center", flexWrap: "wrap" }}>
-          <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase", color: "var(--muted)" }}>Filter:</span>
+          <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "15px", letterSpacing: "2px", textTransform: "uppercase", color: "var(--muted)" }}>Filter:</span>
           <select value={filterWeek} onChange={e => setFilterWeek(e.target.value)} style={{ width: "auto" }}>
             <option value="">All Weeks</option>
             {weeks.map(w => <option key={w} value={String(w)}>Week {w}</option>)}
@@ -119,21 +119,21 @@ export default function ProgressPage() {
             {types.map(t => <option key={t} value={t}>{t}</option>)}
           </select>
           {(filterWeek || filterType) && (
-            <button onClick={() => { setFilterWeek(""); setFilterType(""); }} style={{ background: "none", border: "1px solid var(--border2)", color: "var(--muted)", padding: "6px 12px", borderRadius: "2px", fontFamily: "'DM Mono', monospace", fontSize: "11px", letterSpacing: "1px", cursor: "pointer" }}>
+            <button onClick={() => { setFilterWeek(""); setFilterType(""); }} style={{ background: "none", border: "1px solid var(--border2)", color: "var(--muted)", padding: "6px 12px", borderRadius: "2px", fontFamily: "'DM Mono', monospace", fontSize: "15px", letterSpacing: "1px", cursor: "pointer" }}>
               Clear
             </button>
           )}
         </div>
 
         {loading ? (
-          <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "11px", color: "var(--muted)", letterSpacing: "2px" }}>LOADING...</div>
+          <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "15px", color: "var(--muted)", letterSpacing: "2px" }}>LOADING...</div>
         ) : filtered.length === 0 ? (
           <div style={{ textAlign: "center", padding: "60px 0" }}>
             <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "64px", color: "#1e1e1e", letterSpacing: "4px", marginBottom: "16px" }}>EMPTY</div>
-            <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "11px", color: "var(--muted)", letterSpacing: "2px", textTransform: "uppercase" }}>
+            <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "15px", color: "var(--muted)", letterSpacing: "2px", textTransform: "uppercase" }}>
               No sessions logged yet.
             </div>
-            <Link href="/" style={{ display: "inline-block", marginTop: "20px", fontFamily: "'DM Mono', monospace", fontSize: "10px", color: "var(--accent)", letterSpacing: "2px", textTransform: "uppercase", textDecoration: "underline" }}>
+            <Link href="/" style={{ display: "inline-block", marginTop: "20px", fontFamily: "'DM Mono', monospace", fontSize: "14px", color: "var(--accent)", letterSpacing: "2px", textTransform: "uppercase", textDecoration: "underline" }}>
               Go to Dashboard to log →
             </Link>
           </div>
@@ -149,16 +149,16 @@ export default function ProgressPage() {
                 animation: "fadeInUp 0.2s ease",
               }}>
                 <div style={{ display: "flex", gap: "16px", alignItems: "baseline", flexWrap: "wrap", marginBottom: "8px" }}>
-                  <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "12px", color: "var(--muted)", minWidth: "90px" }}>
+                  <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "14px", color: "var(--muted)", minWidth: "90px" }}>
                     {new Date(log.date).toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" })}
                   </span>
                   <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "22px", letterSpacing: "1px", color: TYPE_COLORS[log.sessionType] ?? "var(--text)" }}>
                     {log.dayName}
                   </span>
-                  <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "11px", color: "var(--muted)", border: "1px solid var(--border)", padding: "4px 10px", borderRadius: "2px", letterSpacing: "1px" }}>
+                  <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "15px", color: "var(--muted)", border: "1px solid var(--border)", padding: "4px 10px", borderRadius: "2px", letterSpacing: "1px" }}>
                     Week {log.weekNumber}
                   </span>
-                  <div style={{ marginLeft: "auto", display: "flex", gap: "16px", fontFamily: "'DM Mono', monospace", fontSize: "12px" }}>
+                  <div style={{ marginLeft: "auto", display: "flex", gap: "16px", fontFamily: "'DM Mono', monospace", fontSize: "14px" }}>
                     <span>
                       <span style={{ color: "var(--muted)" }}>In </span>
                       <span style={{ color: log.energyIn >= 7 ? "var(--accent)" : log.energyIn >= 5 ? "var(--run)" : "var(--accent3)" }}>
@@ -179,29 +179,29 @@ export default function ProgressPage() {
                   <div style={{ marginTop: "10px", display: "grid", gap: "12px" }}>
                     <div style={{ display: "grid", gridTemplateColumns: "var(--two-col)", gap: "12px" }}>
                       <div>
-                        <label style={{ display: "block", fontFamily: "'DM Mono', monospace", fontSize: "11px", color: "var(--muted)", marginBottom: "6px" }}>Energy In</label>
+                        <label style={{ display: "block", fontFamily: "'DM Mono', monospace", fontSize: "15px", color: "var(--muted)", marginBottom: "6px" }}>Energy In</label>
                         <input type="number" min={1} max={10} value={editForm.energyIn} onChange={e => setEditForm(f => ({ ...f, energyIn: Number(e.target.value) }))} />
                       </div>
                       <div>
-                        <label style={{ display: "block", fontFamily: "'DM Mono', monospace", fontSize: "11px", color: "var(--muted)", marginBottom: "6px" }}>Energy Out</label>
+                        <label style={{ display: "block", fontFamily: "'DM Mono', monospace", fontSize: "15px", color: "var(--muted)", marginBottom: "6px" }}>Energy Out</label>
                         <input type="number" min={1} max={10} value={editForm.energyOut} onChange={e => setEditForm(f => ({ ...f, energyOut: Number(e.target.value) }))} />
                       </div>
                     </div>
                     <div>
-                      <label style={{ display: "block", fontFamily: "'DM Mono', monospace", fontSize: "11px", color: "var(--muted)", marginBottom: "6px" }}>Session Notes</label>
+                      <label style={{ display: "block", fontFamily: "'DM Mono', monospace", fontSize: "15px", color: "var(--muted)", marginBottom: "6px" }}>Session Notes</label>
                       <textarea rows={3} value={editForm.sessionNotes} onChange={e => setEditForm(f => ({ ...f, sessionNotes: e.target.value }))} />
                     </div>
                     {log.sessionType === "mma" && (
                       <div>
-                        <label style={{ display: "block", fontFamily: "'DM Mono', monospace", fontSize: "11px", color: "var(--muted)", marginBottom: "6px" }}>MMA Log</label>
+                        <label style={{ display: "block", fontFamily: "'DM Mono', monospace", fontSize: "15px", color: "var(--muted)", marginBottom: "6px" }}>MMA Log</label>
                         <textarea rows={2} value={editForm.mmaLog} onChange={e => setEditForm(f => ({ ...f, mmaLog: e.target.value }))} />
                       </div>
                     )}
                     <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
-                      <button onClick={() => saveEdit(log._id)} disabled={savingId === log._id} style={{ background: "var(--accent)", color: "#000", border: "none", borderRadius: "2px", padding: "8px 14px", fontFamily: "'DM Mono', monospace", fontSize: "11px", letterSpacing: "1px", textTransform: "uppercase" }}>
+                      <button onClick={() => saveEdit(log._id)} disabled={savingId === log._id} style={{ background: "var(--accent)", color: "#000", border: "none", borderRadius: "2px", padding: "8px 14px", fontFamily: "'DM Mono', monospace", fontSize: "15px", letterSpacing: "1px", textTransform: "uppercase" }}>
                         {savingId === log._id ? "Saving..." : "Save"}
                       </button>
-                      <button onClick={() => setEditingId(null)} style={{ background: "transparent", color: "var(--muted)", border: "1px solid var(--border2)", borderRadius: "2px", padding: "8px 14px", fontFamily: "'DM Mono', monospace", fontSize: "11px", letterSpacing: "1px", textTransform: "uppercase" }}>
+                      <button onClick={() => setEditingId(null)} style={{ background: "transparent", color: "var(--muted)", border: "1px solid var(--border2)", borderRadius: "2px", padding: "8px 14px", fontFamily: "'DM Mono', monospace", fontSize: "15px", letterSpacing: "1px", textTransform: "uppercase" }}>
                         Cancel
                       </button>
                     </div>
@@ -214,7 +214,7 @@ export default function ProgressPage() {
                       </div>
                     )}
                     {log.mmaLog && (
-                      <div style={{ fontSize: "13px", color: "var(--muted)", fontStyle: "italic", marginTop: "6px", fontFamily: "'DM Mono', monospace" }}>
+                      <div style={{ fontSize: "15px", color: "var(--muted)", fontStyle: "italic", marginTop: "6px", fontFamily: "'DM Mono', monospace" }}>
                         MMA: {log.mmaLog}
                       </div>
                     )}
@@ -222,10 +222,10 @@ export default function ProgressPage() {
                 )}
                 {editingId !== log._id && (
                   <div style={{ marginTop: "12px", display: "flex", gap: "8px", flexWrap: "wrap" }}>
-                    <button onClick={() => startEdit(log)} style={{ background: "transparent", color: "var(--accent)", border: "1px solid var(--accent)", borderRadius: "2px", padding: "6px 12px", fontFamily: "'DM Mono', monospace", fontSize: "11px", letterSpacing: "1px", textTransform: "uppercase" }}>
+                    <button onClick={() => startEdit(log)} style={{ background: "transparent", color: "var(--accent)", border: "1px solid var(--accent)", borderRadius: "2px", padding: "6px 12px", fontFamily: "'DM Mono', monospace", fontSize: "15px", letterSpacing: "1px", textTransform: "uppercase" }}>
                       Edit
                     </button>
-                    <button onClick={() => deleteLog(log._id)} style={{ background: "transparent", color: "var(--accent3)", border: "1px solid var(--accent3)", borderRadius: "2px", padding: "6px 12px", fontFamily: "'DM Mono', monospace", fontSize: "11px", letterSpacing: "1px", textTransform: "uppercase" }}>
+                    <button onClick={() => deleteLog(log._id)} style={{ background: "transparent", color: "var(--accent3)", border: "1px solid var(--accent3)", borderRadius: "2px", padding: "6px 12px", fontFamily: "'DM Mono', monospace", fontSize: "15px", letterSpacing: "1px", textTransform: "uppercase" }}>
                       Delete
                     </button>
                   </div>

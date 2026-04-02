@@ -42,7 +42,7 @@ body {
   background: var(--bg);
   color: var(--text);
   font-family: 'DM Sans', sans-serif;
-  font-size: 16px;
+  font-size: 18px;
   min-height: 100vh;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
@@ -74,8 +74,8 @@ input, textarea, select {
   color: var(--text);
   border: 1px solid var(--border2);
   border-radius: 2px;
-  padding: 8px 12px;
-  font-size: 15px;
+  padding: 10px 14px;
+  font-size: 16px;
   outline: none;
   transition: border-color 0.15s;
 }

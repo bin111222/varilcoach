@@ -718,6 +718,41 @@ function addProgressionChip(prev: string | undefined, next: string) {
   return "↑";
 }
 
+const PULL_VARIATIONS = [
+  ["Muscle-Up", "Weighted Pull-Up", "Weighted Chin-Up", "Ring Row", "Toes-to-Bar"],
+  ["Chest-to-Bar Pull-Up", "Mixed-Grip Pull-Up", "Supinated Ring Row", "Front Lever Tuck Row", "Hanging Knee Raise"],
+  ["False-Grip Pull-Up", "Archer Pull-Up", "Towel Pull-Up", "Straight-Arm Pulldown (band)", "L-Sit Raise"],
+  ["Commando Pull-Up", "Neutral-Grip Pull-Up", "Australian Row Feet-Elevated", "Scap Pull-Up", "Dragon Flag Negative"],
+];
+
+const PUSH_VARIATIONS = [
+  ["HSPU (wall)", "Weighted Dip", "Ring Dip", "Ring Push-Up", "Planche Lean", "Ab Wheel"],
+  ["Deficit Pike Push-Up", "Paused Dip", "Pseudo Planche Push-Up", "Diamond Push-Up", "Wall HSPU Eccentric", "Body Saw Plank"],
+  ["Parallette HSPU Negative", "Ring Turn-Out Support Hold", "Straight Bar Dip", "Archer Push-Up", "Planche Lean + Toe Tap", "Hollow Rocks"],
+  ["Decline Pike Press", "Tempo Push-Up", "Korean Dip Prep", "RTO Push-Up", "Dumbbell Z-Press", "Deadbug Press"],
+];
+
+const LEGS_VARIATIONS = [
+  ["Box Jump", "Pistol Squat", "Bulgarian Split Squat", "Nordic Curl", "Hollow Body Hold"],
+  ["Broad Jump", "Skater Squat", "Split Squat Iso Hold", "Single-Leg RDL", "Copenhagen Plank"],
+  ["Depth Drop + Stick", "Step-Up", "Reverse Lunge", "Hamstring Slider Curl", "Hanging Knee Tuck"],
+  ["Lateral Bound", "Cyclist Squat", "Rear-Foot Elevated Split Squat", "Nordic Iso", "Pallof Press"],
+];
+
+const SWIM_THEMES = [
+  "Catch Mechanics + Bilateral Breathing",
+  "Body Rotation + Balance",
+  "Kick Timing + Streamline",
+  "Pace Control + Efficient Stroke",
+];
+
+const RUN_STYLES = [
+  { name: "EASY RUN", badge: "Aerobic Reset", note: "Easy effort only. Relaxed rhythm, nasal breathing when possible." },
+  { name: "TEMPO RUN", badge: "Threshold Builder", note: "Controlled discomfort. Hold form and posture throughout." },
+  { name: "INTERVAL RUN", badge: "Speed Economy", note: "Fast but smooth reps. Full control, no sprinting form breakdown." },
+  { name: "PROGRESSION RUN", badge: "Negative Split", note: "Start easy, finish strong. Last third should feel purposeful." },
+];
+
 function adjustExerciseLoad(ex: any, weekNumber: number, baseWeekNumber: number) {
   const load = String(ex.load ?? "");
   const kg = parseKg(load);
@@ -751,6 +786,7 @@ function tweakSetsString(sets: string, weekNumber: number) {
 function generateWeekFromBase(base: AnyWeek, weekNumber: number, baseWeekNumber: number) {
   const w = deepClone(base) as any;
   w.number = weekNumber;
+  const variantIdx = (weekNumber - 1) % 4;
 
   // Keep subtitle consistent; refresh banners/priority for the new week.
   w.subtitle = base.subtitle;
@@ -794,28 +830,49 @@ function generateWeekFromBase(base: AnyWeek, weekNumber: number, baseWeekNumber:
     }
 
     if (day.type === "run") {
+      const runStyle = RUN_STYLES[variantIdx];
+      day.name = runStyle.name;
+      day.badge = runStyle.badge;
       // Run progression: gently extend total duration every 2 weeks; deload trims.
       const baseTotal = 40;
       const deltaWeeks = Math.max(0, weekNumber - baseWeekNumber);
       const inc = Math.floor(deltaWeeks / 2) * 2; // +2 min every 2 weeks
       const total = clamp(Math.round((baseTotal + inc) * phase), 30, 55);
 
-      day.runStats = [{ label: "Total Duration", value: `${total} min`, sub: "" }];
-      day.runIntervals = [
-        { label: "Warm-Up", value: `${clamp(Math.round(10 * phase), 8, 12)} min`, sub: "Easy" },
-        {
-          label: "Main",
-          value: `${clamp(Math.round((total - 20) * phase), 12, 30)} min`,
-          sub: weekNumber < 3 ? "Easy aerobic" : "Tempo / steady (controlled)",
-        },
-        { label: "Cool Down", value: `${clamp(Math.round(10 * phase), 8, 12)} min`, sub: "Easy" },
+      day.runStats = [
+        { label: "Type", value: runStyle.name.replace(" RUN", ""), sub: runStyle.badge },
+        { label: "Total Duration", value: `${total} min`, sub: "" },
       ];
+      if (runStyle.name === "INTERVAL RUN") {
+        day.runIntervals = [
+          { label: "Warm-Up", value: "12 min", sub: "Easy + drills" },
+          { label: "Work", value: "6 × 2 min", sub: "Hard @ 5k effort / 2 min easy jog" },
+          { label: "Cool Down", value: "10 min", sub: "Easy" },
+        ];
+      } else if (runStyle.name === "PROGRESSION RUN") {
+        day.runIntervals = [
+          { label: "Block 1", value: "12 min", sub: "Easy" },
+          { label: "Block 2", value: "12 min", sub: "Steady" },
+          { label: "Block 3", value: "12 min", sub: "Strong finish" },
+        ];
+      } else {
+        day.runIntervals = [
+          { label: "Warm-Up", value: `${clamp(Math.round(10 * phase), 8, 12)} min`, sub: "Easy" },
+          {
+            label: "Main",
+            value: `${clamp(Math.round((total - 20) * phase), 12, 30)} min`,
+            sub: runStyle.name === "EASY RUN" ? "Easy aerobic" : "Tempo / steady (controlled)",
+          },
+          { label: "Cool Down", value: `${clamp(Math.round(10 * phase), 8, 12)} min`, sub: "Easy" },
+        ];
+      }
       day.runNote = isDeload
         ? "Deload: keep it easy-steady. No hero pace."
-        : "Controlled effort. If breathing is ragged, back off and keep it smooth.";
+        : runStyle.note;
     }
 
     if (day.type === "swim") {
+      day.infoBox = `Theme — ${SWIM_THEMES[variantIdx]} | Technique first, no ego laps.`;
       // Swim stays technique-first; gently increase drill volume on build weeks.
       const deltaWeeks = Math.max(0, weekNumber - baseWeekNumber);
       const repsAdd = isDeload ? 0 : Math.floor(deltaWeeks / 4); // +1 rep block every 4 weeks
@@ -839,6 +896,30 @@ function generateWeekFromBase(base: AnyWeek, weekNumber: number, baseWeekNumber:
     if (day.type === "mma") {
       day.mmaNote =
         "Train as normal. After session, log: energy in/out, sparring intensity, any aches. This log shapes the next week.";
+    }
+
+    if (day.type === "pull" && Array.isArray(day.exercises)) {
+      const preferred = PULL_VARIATIONS[variantIdx];
+      day.exercises = day.exercises.map((ex: any, idx: number) => {
+        if (idx === 0 || idx >= preferred.length + 1) return ex;
+        return { ...ex, name: preferred[idx - 1] };
+      });
+    }
+
+    if (day.type === "push" && Array.isArray(day.exercises)) {
+      const preferred = PUSH_VARIATIONS[variantIdx];
+      day.exercises = day.exercises.map((ex: any, idx: number) => {
+        if (idx === 0 || idx >= preferred.length + 1) return ex;
+        return { ...ex, name: preferred[idx - 1] };
+      });
+    }
+
+    if (day.type === "legs" && Array.isArray(day.exercises)) {
+      const preferred = LEGS_VARIATIONS[variantIdx];
+      day.exercises = day.exercises.map((ex: any, idx: number) => {
+        if (idx >= preferred.length) return ex;
+        return { ...ex, name: preferred[idx] };
+      });
     }
   }
 

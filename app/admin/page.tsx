@@ -12,7 +12,7 @@ const TYPES = ["pull", "push", "legs", "swim", "run", "mma", "rest"] as const;
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div style={{ marginBottom: "40px" }}>
-      <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "9px", letterSpacing: "3px", textTransform: "uppercase", color: "var(--muted)", marginBottom: "16px", paddingBottom: "8px", borderBottom: "1px solid var(--border)" }}>
+      <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "15px", letterSpacing: "3px", textTransform: "uppercase", color: "var(--muted)", marginBottom: "16px", paddingBottom: "8px", borderBottom: "1px solid var(--border)" }}>
         {title}
       </div>
       {children}
@@ -23,7 +23,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div style={{ marginBottom: "16px" }}>
-      <label style={{ display: "block", fontFamily: "'DM Mono', monospace", fontSize: "9px", letterSpacing: "2px", textTransform: "uppercase", color: "var(--muted)", marginBottom: "8px" }}>
+      <label style={{ display: "block", fontFamily: "'DM Mono', monospace", fontSize: "15px", letterSpacing: "2px", textTransform: "uppercase", color: "var(--muted)", marginBottom: "8px" }}>
         {label}
       </label>
       {children}
@@ -49,7 +49,7 @@ function Btn({ onClick, children, variant = "default", disabled = false }: {
       style={{
         ...styles[variant],
         fontFamily: "'DM Mono', monospace",
-        fontSize: "10px",
+        fontSize: "14px",
         letterSpacing: "2px",
         textTransform: "uppercase",
         padding: "7px 14px",
@@ -145,11 +145,11 @@ function ExerciseEditor({
           </Field>
 
           <div style={{ display: "flex", gap: "16px", alignItems: "center" }}>
-            <label style={{ display: "flex", alignItems: "center", gap: "8px", fontFamily: "'DM Mono', monospace", fontSize: "10px", color: "var(--muted)", letterSpacing: "1px", cursor: "pointer" }}>
+            <label style={{ display: "flex", alignItems: "center", gap: "8px", fontFamily: "'DM Mono', monospace", fontSize: "14px", color: "var(--muted)", letterSpacing: "1px", cursor: "pointer" }}>
               <input type="checkbox" checked={ex.highlight} onChange={e => updateEx(i, "highlight", e.target.checked)} style={{ accentColor: "var(--accent)" }} />
               ★ Highlight
             </label>
-            <label style={{ display: "flex", alignItems: "center", gap: "8px", fontFamily: "'DM Mono', monospace", fontSize: "10px", color: "var(--muted)", letterSpacing: "1px", cursor: "pointer" }}>
+            <label style={{ display: "flex", alignItems: "center", gap: "8px", fontFamily: "'DM Mono', monospace", fontSize: "14px", color: "var(--muted)", letterSpacing: "1px", cursor: "pointer" }}>
               <input type="checkbox" checked={ex.optional ?? false} onChange={e => updateEx(i, "optional", e.target.checked)} style={{ accentColor: "var(--accent)" }} />
               Optional
             </label>
@@ -182,7 +182,7 @@ function DrillEditor({ drills, onChange }: { drills: any[]; onChange: (d: any[])
             <textarea value={drill.cue} onChange={e => updateDrill(i, "cue", e.target.value)} rows={2} style={{ width: "100%", resize: "vertical" }} />
           </Field>
           <div style={{ display: "flex", gap: "16px", alignItems: "center", justifyContent: "space-between" }}>
-            <label style={{ display: "flex", alignItems: "center", gap: "8px", fontFamily: "'DM Mono', monospace", fontSize: "10px", color: "var(--muted)", letterSpacing: "1px", cursor: "pointer" }}>
+            <label style={{ display: "flex", alignItems: "center", gap: "8px", fontFamily: "'DM Mono', monospace", fontSize: "14px", color: "var(--muted)", letterSpacing: "1px", cursor: "pointer" }}>
               <input type="checkbox" checked={drill.isNew ?? false} onChange={e => updateDrill(i, "isNew", e.target.checked)} style={{ accentColor: "var(--swim)" }} />
               New drill
             </label>
@@ -248,7 +248,7 @@ function DayEditor({
           </Field>
         </div>
         <div style={{ display: "flex", gap: "24px", marginTop: "8px" }}>
-          <label style={{ display: "flex", alignItems: "center", gap: "8px", fontFamily: "'DM Mono', monospace", fontSize: "10px", color: "var(--muted)", letterSpacing: "1px", cursor: "pointer" }}>
+          <label style={{ display: "flex", alignItems: "center", gap: "8px", fontFamily: "'DM Mono', monospace", fontSize: "14px", color: "var(--muted)", letterSpacing: "1px", cursor: "pointer" }}>
             <input type="checkbox" checked={day.optional ?? false} onChange={e => onChange({ ...day, optional: e.target.checked })} style={{ accentColor: "var(--accent)" }} />
             Optional day
           </label>
@@ -376,13 +376,13 @@ function WeekEditor({ week, onSave, onDelete }: { week: any; onSave: (w: any) =>
           WEEK <span style={{ color: "var(--accent)" }}>{data.number}</span>
         </div>
         <div style={{ flex: 1 }} />
-        {saved && <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "10px", color: "var(--accent)", letterSpacing: "1px" }}>✓ Saved</span>}
+        {saved && <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "14px", color: "var(--accent)", letterSpacing: "1px" }}>✓ Saved</span>}
         <Btn onClick={save} variant="accent" disabled={saving}>{saving ? "Saving..." : "Save Changes"}</Btn>
         {!confirmDelete ? (
           <Btn onClick={() => setConfirmDelete(true)} variant="danger">Delete Week</Btn>
         ) : (
           <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
-            <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "10px", color: "var(--muted)" }}>Confirm?</span>
+            <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "14px", color: "var(--muted)" }}>Confirm?</span>
             <Btn onClick={() => { onDelete(); setConfirmDelete(false); }} variant="danger">Yes, Delete</Btn>
             <Btn onClick={() => setConfirmDelete(false)} variant="ghost">Cancel</Btn>
           </div>
@@ -444,7 +444,7 @@ function WeekEditor({ week, onSave, onDelete }: { week: any; onSave: (w: any) =>
       </div>
 
       {/* Day tabs */}
-      <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "9px", letterSpacing: "3px", textTransform: "uppercase", color: "var(--muted)", marginBottom: "12px" }}>
+      <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "15px", letterSpacing: "3px", textTransform: "uppercase", color: "var(--muted)", marginBottom: "12px" }}>
         Edit Days
       </div>
       <div style={{ display: "flex", gap: "4px", marginBottom: "20px", flexWrap: "wrap" }}>
@@ -457,7 +457,7 @@ function WeekEditor({ week, onSave, onDelete }: { week: any; onSave: (w: any) =>
               onClick={() => setActiveDayId(day.id)}
               style={{
                 fontFamily: "'DM Mono', monospace",
-                fontSize: "10px",
+                fontSize: "14px",
                 letterSpacing: "2px",
                 textTransform: "uppercase",
                 padding: "6px 14px",
@@ -512,7 +512,7 @@ function SettingsEditor({ settings, onSave }: { settings: any; onSave: (s: any) 
           ATHLETE <span style={{ color: "var(--accent)" }}>SETTINGS</span>
         </div>
         <div style={{ flex: 1 }} />
-        {saved && <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "10px", color: "var(--accent)" }}>✓ Saved</span>}
+        {saved && <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "14px", color: "var(--accent)" }}>✓ Saved</span>}
         <Btn onClick={save} variant="accent" disabled={saving}>{saving ? "Saving..." : "Save Settings"}</Btn>
       </div>
 
@@ -564,7 +564,7 @@ function SettingsEditor({ settings, onSave }: { settings: any; onSave: (s: any) 
                 value={data.systemPromptOverride ?? ""}
                 onChange={e => setData((p: any) => ({ ...p, systemPromptOverride: e.target.value }))}
                 rows={5}
-                style={{ width: "100%", resize: "vertical", fontSize: "12px" }}
+                style={{ width: "100%", resize: "vertical", fontSize: "14px" }}
                 placeholder="Leave blank to use the auto-generated coaching prompt that includes your programme data and goals..."
               />
             </Field>
@@ -660,7 +660,7 @@ export default function AdminPage() {
 
   if (loading) {
     return (
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "calc(100vh - 56px)", color: "var(--muted)", fontFamily: "'DM Mono', monospace", fontSize: "11px", letterSpacing: "2px" }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "calc(100vh - 56px)", color: "var(--muted)", fontFamily: "'DM Mono', monospace", fontSize: "15px", letterSpacing: "2px" }}>
         LOADING...
       </div>
     );
@@ -676,7 +676,7 @@ export default function AdminPage() {
           <h1 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "56px", lineHeight: "0.9", letterSpacing: "2px" }}>
             ADMIN <span style={{ color: "var(--accent)" }}>PANEL</span>
           </h1>
-          <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "10px", letterSpacing: "2px", textTransform: "uppercase", color: "var(--muted)", marginTop: "10px" }}>
+          <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "14px", letterSpacing: "2px", textTransform: "uppercase", color: "var(--muted)", marginTop: "10px" }}>
             Edit everything — live changes to MongoDB
           </div>
         </div>
@@ -695,7 +695,7 @@ export default function AdminPage() {
             onClick={() => setTab(t)}
             style={{
               fontFamily: "'DM Mono', monospace",
-              fontSize: "10px",
+              fontSize: "14px",
               letterSpacing: "2px",
               textTransform: "uppercase",
               padding: "6px 16px",
@@ -717,7 +717,7 @@ export default function AdminPage() {
           <div>
             {/* Week selector */}
             <div style={{ display: "flex", gap: "8px", marginBottom: "32px", alignItems: "center", flexWrap: "wrap" }}>
-              <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "9px", letterSpacing: "2px", textTransform: "uppercase", color: "var(--muted)", marginRight: "8px" }}>
+              <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "15px", letterSpacing: "2px", textTransform: "uppercase", color: "var(--muted)", marginRight: "8px" }}>
                 Weeks:
               </span>
               {weeks.map(w => (
@@ -726,7 +726,7 @@ export default function AdminPage() {
                   onClick={() => setActiveWeekNum(w.number)}
                   style={{
                     fontFamily: "'DM Mono', monospace",
-                    fontSize: "10px",
+                    fontSize: "14px",
                     letterSpacing: "2px",
                     padding: "6px 14px",
                     border: `1px solid ${activeWeekNum === w.number ? "var(--accent)" : "var(--border2)"}`,
@@ -750,7 +750,7 @@ export default function AdminPage() {
                 onDelete={() => deleteWeek(activeWeek.number)}
               />
             ) : (
-              <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "12px", color: "var(--muted)", textAlign: "center", padding: "60px 0" }}>
+              <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "14px", color: "var(--muted)", textAlign: "center", padding: "60px 0" }}>
                 No weeks yet. <button onClick={seed} style={{ color: "var(--accent)", background: "none", border: "none", cursor: "pointer", fontFamily: "'DM Mono', monospace", textDecoration: "underline" }}>Seed W1 + W2</button> or create a new week.
               </div>
             )}
@@ -817,7 +817,7 @@ function DataTab() {
     }
   }
 
-  if (loading) return <div style={{ color: "var(--muted)", fontFamily: "'DM Mono', monospace", fontSize: "13px" }}>Loading...</div>;
+  if (loading) return <div style={{ color: "var(--muted)", fontFamily: "'DM Mono', monospace", fontSize: "15px" }}>Loading...</div>;
 
   return (
     <div>
@@ -825,7 +825,7 @@ function DataTab() {
         SESSION <span style={{ color: "var(--accent)" }}>LOGS</span>
       </div>
       {progress.length === 0 ? (
-        <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "13px", color: "var(--muted)", padding: "40px 0" }}>
+        <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "15px", color: "var(--muted)", padding: "40px 0" }}>
           No sessions logged yet. Go to the dashboard and log a session.
         </div>
       ) : (
@@ -841,16 +841,16 @@ function DataTab() {
               borderRadius: "2px",
               fontSize: "15px",
             }}>
-              <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "12px", color: "var(--muted)", minWidth: "90px" }}>
+              <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "14px", color: "var(--muted)", minWidth: "90px" }}>
                 {new Date(log.date).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "2-digit" })}
               </span>
               <span style={{ color: TYPE_COLORS[log.sessionType] ?? "var(--text2)", fontWeight: 500, minWidth: "120px" }}>
                 {log.dayName}
               </span>
-              <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "12px", color: "var(--muted)" }}>
+              <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "14px", color: "var(--muted)" }}>
                 W{log.weekNumber}
               </span>
-              <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "12px", color: "var(--muted)" }}>
+              <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "14px", color: "var(--muted)" }}>
                 In {log.energyIn}/10 · Out {log.energyOut}/10
               </span>
               {editingId === log._id ? (

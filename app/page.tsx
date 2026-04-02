@@ -105,7 +105,7 @@ export default function Dashboard() {
         height: "calc(100vh - 56px)",
         color: "var(--muted)",
         fontFamily: "'DM Mono', monospace",
-        fontSize: "11px",
+        fontSize: "15px",
         letterSpacing: "2px",
       }}>
         LOADING...
@@ -126,10 +126,10 @@ export default function Dashboard() {
           <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "24px", color: "var(--run)", letterSpacing: "2px", marginBottom: "12px" }}>
             DATABASE NOT CONNECTED
           </div>
-          <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "11px", color: "#9a7040", letterSpacing: "1px", lineHeight: "1.8" }}>
+          <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "15px", color: "#9a7040", letterSpacing: "1px", lineHeight: "1.8" }}>
             {dbError}
           </div>
-          <div style={{ marginTop: "20px", fontFamily: "'DM Mono', monospace", fontSize: "10px", color: "var(--muted)", letterSpacing: "1px", lineHeight: "2" }}>
+          <div style={{ marginTop: "20px", fontFamily: "'DM Mono', monospace", fontSize: "14px", color: "var(--muted)", letterSpacing: "1px", lineHeight: "2" }}>
             1. Copy <code style={{ color: "var(--accent)" }}>.env.local.example</code> → <code style={{ color: "var(--accent)" }}>.env.local</code><br />
             2. Add your <code style={{ color: "var(--accent)" }}>MONGODB_URI</code> and <code style={{ color: "var(--accent)" }}>OPENAI_API_KEY</code><br />
             3. Restart the dev server
@@ -149,7 +149,7 @@ export default function Dashboard() {
           border: "1px solid var(--run)",
           padding: "20px var(--page-pad)",
           fontFamily: "'DM Mono', monospace",
-          fontSize: "12px",
+          fontSize: "14px",
           color: "var(--run)",
           letterSpacing: "1px",
           display: "flex",
@@ -169,7 +169,7 @@ export default function Dashboard() {
               padding: "6px 16px",
               borderRadius: "2px",
               fontFamily: "'DM Mono', monospace",
-              fontSize: "10px",
+              fontSize: "14px",
               letterSpacing: "2px",
               textTransform: "uppercase",
               cursor: "pointer",
@@ -193,7 +193,7 @@ export default function Dashboard() {
         <div>
           <div style={{
             fontFamily: "'DM Mono', monospace",
-            fontSize: "10px",
+            fontSize: "14px",
             letterSpacing: "3px",
             textTransform: "uppercase",
             color: "var(--muted)",
@@ -216,8 +216,8 @@ export default function Dashboard() {
             )}
           </h1>
         </div>
-        <div style={{ textAlign: "right", fontFamily: "'DM Mono', monospace", fontSize: "11px", color: "var(--muted)" }}>
-          <div style={{ color: "var(--accent)", fontSize: "10px", letterSpacing: "2px", textTransform: "uppercase", marginBottom: "6px" }}>
+        <div style={{ textAlign: "right", fontFamily: "'DM Mono', monospace", fontSize: "15px", color: "var(--muted)" }}>
+          <div style={{ color: "var(--accent)", fontSize: "14px", letterSpacing: "2px", textTransform: "uppercase", marginBottom: "6px" }}>
             Currently On
           </div>
           <div style={{ color: "var(--text)", fontSize: "24px", fontFamily: "'Bebas Neue', sans-serif", letterSpacing: "2px" }}>
@@ -225,7 +225,7 @@ export default function Dashboard() {
           </div>
           <Link href="/program" style={{
             color: "var(--muted)",
-            fontSize: "9px",
+            fontSize: "15px",
             letterSpacing: "2px",
             textTransform: "uppercase",
             textDecoration: "underline",
@@ -242,7 +242,7 @@ export default function Dashboard() {
           {/* Today's session */}
           {todaySession && (
             <div style={{ marginBottom: "48px" }}>
-              <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "9px", letterSpacing: "3px", textTransform: "uppercase", color: "var(--muted)", marginBottom: "20px" }}>
+              <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "15px", letterSpacing: "3px", textTransform: "uppercase", color: "var(--muted)", marginBottom: "20px" }}>
                 Today's Session
               </div>
 
@@ -268,7 +268,7 @@ export default function Dashboard() {
                     {todaySession.optional && (
                       <span style={{
                         fontFamily: "'DM Mono', monospace",
-                        fontSize: "9px",
+                        fontSize: "15px",
                         letterSpacing: "2px",
                         textTransform: "uppercase",
                         color: "var(--legs)",
@@ -283,7 +283,7 @@ export default function Dashboard() {
                   {todaySession.badge && (
                     <span style={{
                       fontFamily: "'DM Mono', monospace",
-                      fontSize: "9px",
+                      fontSize: "15px",
                       letterSpacing: "2px",
                       textTransform: "uppercase",
                       padding: "4px 10px",
@@ -304,7 +304,7 @@ export default function Dashboard() {
                         display: "flex",
                         gap: "12px",
                         alignItems: "baseline",
-                        fontSize: "13px",
+                        fontSize: "15px",
                       }}>
                         <span style={{
                           color: ex.highlight ? TYPE_COLORS[todaySession.type] : "var(--text)",
@@ -313,12 +313,12 @@ export default function Dashboard() {
                         }}>
                           {ex.highlight && "★ "}{ex.name}
                         </span>
-                        <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "11px", color: "var(--text2)" }}>
+                        <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "15px", color: "var(--text2)" }}>
                           {ex.sets}
                         </span>
                         <span style={{
                           fontFamily: "'DM Mono', monospace",
-                          fontSize: "11px",
+                          fontSize: "15px",
                           color: ex.load === "BW" ? "var(--muted)" : TYPE_COLORS[todaySession.type],
                         }}>
                           {ex.load}
@@ -326,7 +326,7 @@ export default function Dashboard() {
                       </div>
                     ))}
                     {todaySession.exercises.length > 5 && (
-                      <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "10px", color: "var(--muted)", letterSpacing: "1px" }}>
+                      <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "14px", color: "var(--muted)", letterSpacing: "1px" }}>
                         +{todaySession.exercises.length - 5} more exercises
                       </div>
                     )}
@@ -334,7 +334,7 @@ export default function Dashboard() {
                 )}
 
                 {todaySession.type === "swim" && todaySession.drills?.length > 0 && (
-                  <div style={{ fontSize: "13px", color: "var(--text2)" }}>
+                  <div style={{ fontSize: "15px", color: "var(--text2)" }}>
                     {todaySession.drills.length} drills &middot; {todaySession.sessionNote}
                   </div>
                 )}
@@ -343,16 +343,16 @@ export default function Dashboard() {
                   <div style={{ display: "flex", gap: "24px", flexWrap: "wrap" }}>
                     {todaySession.runStats.map((s: any, i: number) => (
                       <div key={i}>
-                        <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "9px", letterSpacing: "2px", textTransform: "uppercase", color: "var(--muted)", marginBottom: "4px" }}>{s.label}</div>
+                        <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "15px", letterSpacing: "2px", textTransform: "uppercase", color: "var(--muted)", marginBottom: "4px" }}>{s.label}</div>
                         <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "28px", color: "var(--run)", lineHeight: "1" }}>{s.value}</div>
-                        <div style={{ fontSize: "11px", color: "var(--muted)", marginTop: "2px" }}>{s.sub}</div>
+                        <div style={{ fontSize: "15px", color: "var(--muted)", marginTop: "2px" }}>{s.sub}</div>
                       </div>
                     ))}
                   </div>
                 )}
 
                 {todaySession.type === "mma" && (
-                  <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "11px", color: "var(--muted)", letterSpacing: "1px" }}>
+                  <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "15px", color: "var(--muted)", letterSpacing: "1px" }}>
                     Fight session. Log energy in/out after.
                   </div>
                 )}
@@ -369,7 +369,7 @@ export default function Dashboard() {
                   href={`/program?week=${currentWeekNum}&day=${todaySession.id}`}
                   style={{
                     fontFamily: "'DM Mono', monospace",
-                    fontSize: "10px",
+                    fontSize: "14px",
                     letterSpacing: "2px",
                     textTransform: "uppercase",
                     padding: "8px 16px",
@@ -386,7 +386,7 @@ export default function Dashboard() {
                   onClick={() => setLogOpen(!logOpen)}
                   style={{
                     fontFamily: "'DM Mono', monospace",
-                    fontSize: "10px",
+                    fontSize: "14px",
                     letterSpacing: "2px",
                     textTransform: "uppercase",
                     padding: "8px 16px",
@@ -399,7 +399,7 @@ export default function Dashboard() {
                   {logOpen ? "Cancel" : "Log Session"}
                 </button>
                 {saved && (
-                  <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "10px", color: "var(--accent)", letterSpacing: "1px", alignSelf: "center" }}>
+                  <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "14px", color: "var(--accent)", letterSpacing: "1px", alignSelf: "center" }}>
                     ✓ Saved
                   </span>
                 )}
@@ -415,12 +415,12 @@ export default function Dashboard() {
                   borderRadius: "2px",
                   animation: "fadeInUp 0.2s ease",
                 }}>
-                  <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "9px", letterSpacing: "3px", textTransform: "uppercase", color: "var(--muted)", marginBottom: "20px" }}>
+                  <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "15px", letterSpacing: "3px", textTransform: "uppercase", color: "var(--muted)", marginBottom: "20px" }}>
                     Quick Session Log
                   </div>
                   <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px", marginBottom: "16px" }}>
                     <div>
-                      <label style={{ display: "block", fontFamily: "'DM Mono', monospace", fontSize: "9px", letterSpacing: "2px", textTransform: "uppercase", color: "var(--muted)", marginBottom: "8px" }}>
+                      <label style={{ display: "block", fontFamily: "'DM Mono', monospace", fontSize: "15px", letterSpacing: "2px", textTransform: "uppercase", color: "var(--muted)", marginBottom: "8px" }}>
                         Energy In (1–10)
                       </label>
                       <input
@@ -432,7 +432,7 @@ export default function Dashboard() {
                       <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "32px", color: "var(--accent)" }}>{logForm.energyIn}</div>
                     </div>
                     <div>
-                      <label style={{ display: "block", fontFamily: "'DM Mono', monospace", fontSize: "9px", letterSpacing: "2px", textTransform: "uppercase", color: "var(--muted)", marginBottom: "8px" }}>
+                      <label style={{ display: "block", fontFamily: "'DM Mono', monospace", fontSize: "15px", letterSpacing: "2px", textTransform: "uppercase", color: "var(--muted)", marginBottom: "8px" }}>
                         Energy Out (1–10)
                       </label>
                       <input
@@ -446,7 +446,7 @@ export default function Dashboard() {
                   </div>
                   {todaySession.type === "mma" && (
                     <div style={{ marginBottom: "16px" }}>
-                      <label style={{ display: "block", fontFamily: "'DM Mono', monospace", fontSize: "9px", letterSpacing: "2px", textTransform: "uppercase", color: "var(--muted)", marginBottom: "8px" }}>
+                      <label style={{ display: "block", fontFamily: "'DM Mono', monospace", fontSize: "15px", letterSpacing: "2px", textTransform: "uppercase", color: "var(--muted)", marginBottom: "8px" }}>
                         MMA Log
                       </label>
                       <textarea
@@ -459,7 +459,7 @@ export default function Dashboard() {
                     </div>
                   )}
                   <div style={{ marginBottom: "20px" }}>
-                    <label style={{ display: "block", fontFamily: "'DM Mono', monospace", fontSize: "9px", letterSpacing: "2px", textTransform: "uppercase", color: "var(--muted)", marginBottom: "8px" }}>
+                    <label style={{ display: "block", fontFamily: "'DM Mono', monospace", fontSize: "15px", letterSpacing: "2px", textTransform: "uppercase", color: "var(--muted)", marginBottom: "8px" }}>
                       Session Notes
                     </label>
                     <textarea
@@ -480,7 +480,7 @@ export default function Dashboard() {
                       padding: "10px 24px",
                       borderRadius: "2px",
                       fontFamily: "'DM Mono', monospace",
-                      fontSize: "10px",
+                      fontSize: "14px",
                       letterSpacing: "2px",
                       textTransform: "uppercase",
                       opacity: saving ? 0.6 : 1,
@@ -496,7 +496,7 @@ export default function Dashboard() {
           {/* Week strip */}
           {week?.days && (
             <div style={{ marginBottom: "48px" }}>
-              <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "9px", letterSpacing: "3px", textTransform: "uppercase", color: "var(--muted)", marginBottom: "16px" }}>
+              <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "15px", letterSpacing: "3px", textTransform: "uppercase", color: "var(--muted)", marginBottom: "16px" }}>
                 Week {currentWeekNum} Overview
               </div>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", border: "1px solid var(--border)", borderRadius: "2px", overflow: "hidden" }}>
@@ -529,7 +529,7 @@ export default function Dashboard() {
                       <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "18px", letterSpacing: "1px", color, display: "block" }}>
                         {day.id.toUpperCase().slice(0, 3)}
                       </div>
-                      <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "8px", letterSpacing: "1px", textTransform: "uppercase", color: "var(--muted)", marginTop: "4px" }}>
+                      <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "14px", letterSpacing: "1px", textTransform: "uppercase", color: "var(--muted)", marginTop: "4px" }}>
                         {day.type}{day.optional ? "?" : ""}
                       </div>
                       <div style={{ width: "5px", height: "5px", borderRadius: "50%", background: color, marginTop: "8px" }} />
@@ -543,13 +543,13 @@ export default function Dashboard() {
           {/* Priority stack */}
           {week?.priorityStack?.length > 0 && (
             <div>
-              <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "9px", letterSpacing: "3px", textTransform: "uppercase", color: "var(--muted)", marginBottom: "16px" }}>
+              <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "15px", letterSpacing: "3px", textTransform: "uppercase", color: "var(--muted)", marginBottom: "16px" }}>
                 Week {currentWeekNum} Priority Stack
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
                 {week.priorityStack.map((item: string, i: number) => (
-                  <div key={i} style={{ display: "flex", gap: "12px", fontSize: "13px", color: "var(--text2)" }}>
-                    <span style={{ color: "var(--accent)", fontFamily: "'DM Mono', monospace", fontSize: "10px" }}>▸</span>
+                  <div key={i} style={{ display: "flex", gap: "12px", fontSize: "15px", color: "var(--text2)" }}>
+                    <span style={{ color: "var(--accent)", fontFamily: "'DM Mono', monospace", fontSize: "14px" }}>▸</span>
                     {item}
                   </div>
                 ))}
@@ -560,7 +560,7 @@ export default function Dashboard() {
           {/* Recent logs */}
           {recentProgress.length > 0 && (
             <div style={{ marginTop: "48px" }}>
-              <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "9px", letterSpacing: "3px", textTransform: "uppercase", color: "var(--muted)", marginBottom: "16px" }}>
+              <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "15px", letterSpacing: "3px", textTransform: "uppercase", color: "var(--muted)", marginBottom: "16px" }}>
                 Recent Sessions
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
@@ -573,15 +573,15 @@ export default function Dashboard() {
                     background: "var(--surface)",
                     border: "1px solid var(--border)",
                     borderRadius: "2px",
-                    fontSize: "12px",
+                    fontSize: "14px",
                   }}>
-                    <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "10px", color: "var(--muted)", minWidth: "80px" }}>
+                    <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "14px", color: "var(--muted)", minWidth: "80px" }}>
                       {new Date(log.date).toLocaleDateString("en-GB", { day: "numeric", month: "short" })}
                     </span>
                     <span style={{ color: TYPE_COLORS[log.sessionType] ?? "var(--text2)", fontWeight: 500 }}>
                       {log.dayName}
                     </span>
-                    <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "10px", color: "var(--muted)", marginLeft: "auto" }}>
+                    <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "14px", color: "var(--muted)", marginLeft: "auto" }}>
                       W{log.weekNumber} · In {log.energyIn}/10 · Out {log.energyOut}/10
                     </span>
                   </div>
@@ -591,7 +591,7 @@ export default function Dashboard() {
                 display: "inline-block",
                 marginTop: "12px",
                 fontFamily: "'DM Mono', monospace",
-                fontSize: "9px",
+                fontSize: "15px",
                 letterSpacing: "2px",
                 textTransform: "uppercase",
                 color: "var(--muted)",
