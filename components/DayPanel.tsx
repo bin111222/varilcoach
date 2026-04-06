@@ -188,7 +188,7 @@ export default function DayPanel({ day, weekNumber }: { day: IDay; weekNumber: n
                     gap: "8px",
                   }}>
                     {drill.name}
-                    {drill.isNew && (
+                    {(drill.isNewDrill ?? drill.isNew) && (
                       <span style={{
                         fontFamily: "'DM Mono', monospace",
                         fontSize: "8px",

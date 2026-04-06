@@ -24,7 +24,7 @@ export default function AICoach() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [sessionId, setSessionId] = useState<string>("");
-  const bottomRef = useRef<HTMLDivElement>(null);
+  const messagesScrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
@@ -43,7 +43,12 @@ export default function AICoach() {
   }, []);
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    const el = messagesScrollRef.current;
+    if (!el) return;
+    // scrollIntoView on inner content scrolls the window on first paint; only
+    // scroll the chat panel, and only once there is an active thread.
+    if (messages.length === 0 && !loading) return;
+    el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
   }, [messages, loading]);
 
   async function send(text?: string) {
@@ -117,13 +122,15 @@ export default function AICoach() {
             AI COACH
           </div>
           <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "15px", letterSpacing: "2px", textTransform: "uppercase", color: "var(--muted)" }}>
-            GPT-4o · Knows your programme
+            Claude Opus · Knows your programme
           </div>
         </div>
       </div>
 
       {/* Messages */}
-      <div style={{
+      <div
+        ref={messagesScrollRef}
+        style={{
         flex: 1,
         overflowY: "auto",
         padding: "20px 24px",
@@ -131,7 +138,8 @@ export default function AICoach() {
         flexDirection: "column",
         gap: "16px",
         minHeight: 0,
-      }}>
+      }}
+      >
         {messages.length === 0 && (
           <div style={{ textAlign: "center", paddingTop: "40px" }}>
             <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "32px", color: "#222", letterSpacing: "3px", marginBottom: "12px" }}>
@@ -309,8 +317,6 @@ export default function AICoach() {
             ⚠ {error}
           </div>
         )}
-
-        <div ref={bottomRef} />
       </div>
 
       {/* Input */}

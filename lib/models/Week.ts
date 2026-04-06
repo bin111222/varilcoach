@@ -17,6 +17,7 @@ export interface IDrill {
   volume: string;
   cue: string;
   isNew?: boolean;
+  isNewDrill?: boolean;
   highlight?: boolean;
 }
 
@@ -72,10 +73,10 @@ const DrillSchema = new Schema<IDrill>(
     name: { type: String, required: true },
     volume: { type: String, required: true },
     cue: { type: String, required: true },
-    isNew: { type: Boolean, default: false },
+    isNewDrill: { type: Boolean, default: false },
     highlight: { type: Boolean, default: false },
   },
-  { suppressReservedKeysWarning: true }
+  { _id: true }
 );
 
 const RunIntervalSchema = new Schema<IRunInterval>({

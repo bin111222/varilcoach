@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const TYPE_COLORS: Record<string, string> = {
   pull: "var(--pull)", push: "var(--push)", run: "var(--run)",
@@ -194,7 +194,7 @@ function DrillEditor({ drills, onChange }: { drills: any[]; onChange: (d: any[])
           </Field>
           <div style={{ display: "flex", gap: "16px", alignItems: "center", justifyContent: "space-between" }}>
             <label style={{ display: "flex", alignItems: "center", gap: "8px", fontFamily: "'DM Mono', monospace", fontSize: "14px", color: "var(--muted)", letterSpacing: "1px", cursor: "pointer" }}>
-              <input type="checkbox" checked={drill.isNew ?? false} onChange={e => updateDrill(i, "isNew", e.target.checked)} style={{ accentColor: "var(--swim)" }} />
+              <input type="checkbox" checked={drill.isNewDrill ?? drill.isNew ?? false} onChange={e => updateDrill(i, "isNewDrill", e.target.checked)} style={{ accentColor: "var(--swim)" }} />
               New drill
             </label>
             <Btn onClick={() => onChange(drills.filter((_, idx) => idx !== i))} variant="danger">Remove</Btn>
@@ -341,12 +341,21 @@ function DayEditor({
 }
 
 // ─── Week Editor ─────────────────────────────────────────────────────────────
-function WeekEditor({ week, onSave, onDelete }: { week: any; onSave: (w: any) => Promise<void>; onDelete: () => Promise<void> }) {
+function WeekEditor({ week, onSave, onDelete, onDirtyChange, onRegisterSave }: { week: any; onSave: (w: any) => Promise<void>; onDelete: () => Promise<void>; onDirtyChange?: (dirty: boolean) => void; onRegisterSave?: (save: () => Promise<void>) => void; }) {
   const [data, setData] = useState({ ...week });
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [activeDayId, setActiveDayId] = useState(week.days?.[0]?.id ?? "mon");
   const [confirmDelete, setConfirmDelete] = useState(false);
+
+  useEffect(() => {
+    setData({ ...week });
+    setActiveDayId(week.days?.[0]?.id ?? "mon");
+  }, [week]);
+
+  useEffect(() => {
+    onDirtyChange?.(JSON.stringify(data) !== JSON.stringify(week));
+  }, [data, week, onDirtyChange]);
 
   const activeDay = data.days?.find((d: any) => d.id === activeDayId) ?? data.days?.[0];
 
@@ -362,8 +371,13 @@ function WeekEditor({ week, onSave, onDelete }: { week: any; onSave: (w: any) =>
     await onSave(data);
     setSaving(false);
     setSaved(true);
+    onDirtyChange?.(false);
     setTimeout(() => setSaved(false), 3000);
   }
+
+  useEffect(() => {
+    onRegisterSave?.(save);
+  }, [onRegisterSave, data]);
 
   function updateListItem(field: string, i: number, value: string) {
     const arr = [...(data[field] ?? [])];
@@ -497,18 +511,31 @@ function WeekEditor({ week, onSave, onDelete }: { week: any; onSave: (w: any) =>
 }
 
 // ─── Settings Editor ─────────────────────────────────────────────────────────
-function SettingsEditor({ settings, onSave }: { settings: any; onSave: (s: any) => Promise<void> }) {
+function SettingsEditor({ settings, onSave, onDirtyChange, onRegisterSave }: { settings: any; onSave: (s: any) => Promise<void>; onDirtyChange?: (dirty: boolean) => void; onRegisterSave?: (save: () => Promise<void>) => void; }) {
   const [data, setData] = useState({ ...settings });
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+
+  useEffect(() => {
+    setData({ ...settings });
+  }, [settings]);
+
+  useEffect(() => {
+    onDirtyChange?.(JSON.stringify(data) !== JSON.stringify(settings));
+  }, [data, settings, onDirtyChange]);
 
   async function save() {
     setSaving(true);
     await onSave(data);
     setSaving(false);
     setSaved(true);
+    onDirtyChange?.(false);
     setTimeout(() => setSaved(false), 3000);
   }
+
+  useEffect(() => {
+    onRegisterSave?.(save);
+  }, [onRegisterSave, data]);
 
   function updateGoal(i: number, value: string) {
     const goals = [...(data.goals ?? [])];
@@ -586,15 +613,79 @@ function SettingsEditor({ settings, onSave }: { settings: any; onSave: (s: any) 
   );
 }
 
+function ResultsEditor({ settings, onSave, onDirtyChange, onRegisterSave }: { settings: any; onSave: (s: any) => Promise<void>; onDirtyChange?: (dirty: boolean) => void; onRegisterSave?: (save: () => Promise<void>) => void; }) {
+  const [data, setData] = useState<any>({
+    ...(settings?.resultsBoard ?? {
+      prs: [
+        { label: "Weighted Pull-Up", current: "35", target: "40", unit: "kg" },
+        { label: "Weighted Dip", current: "50", target: "60", unit: "kg" },
+        { label: "5K Time", current: "22:30", target: "19:59", unit: "min:sec" },
+        { label: "Muscle-Ups", current: "5", target: "10", unit: "reps" },
+      ],
+      highlights: ["Consistency streak", "New technique improvements"],
+    }),
+  });
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+
+  useEffect(() => {
+    onDirtyChange?.(JSON.stringify(data) !== JSON.stringify(settings?.resultsBoard ?? {}));
+  }, [data, settings, onDirtyChange]);
+
+  async function save() {
+    setSaving(true);
+    await onSave({ ...settings, resultsBoard: data });
+    setSaving(false);
+    setSaved(true);
+    onDirtyChange?.(false);
+    setTimeout(() => setSaved(false), 2500);
+  }
+
+  useEffect(() => {
+    onRegisterSave?.(save);
+  }, [onRegisterSave, data, settings]);
+
+  return (
+    <div>
+      <div style={{ display: "flex", gap: "12px", alignItems: "center", marginBottom: "24px" }}>
+        <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "28px", letterSpacing: "2px" }}>
+          RESULTS <span style={{ color: "var(--accent)" }}>EDITOR</span>
+        </div>
+        <div style={{ flex: 1 }} />
+        {saved && <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "12px", color: "var(--accent)" }}>Saved ✓</span>}
+        <Btn onClick={save} variant="accent" disabled={saving}>{saving ? "Saving..." : "Save Results"}</Btn>
+      </div>
+
+      <Section title="PR Board">
+        {(data.prs ?? []).map((pr: any, i: number) => (
+          <div key={i} style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 80px auto", gap: "8px", marginBottom: "8px", alignItems: "end" }}>
+            <input value={pr.label ?? ""} placeholder="Metric" onChange={(e) => setData((p: any) => ({ ...p, prs: p.prs.map((x: any, j: number) => j === i ? { ...x, label: e.target.value } : x) }))} />
+            <input value={pr.current ?? ""} placeholder="Current" onChange={(e) => setData((p: any) => ({ ...p, prs: p.prs.map((x: any, j: number) => j === i ? { ...x, current: e.target.value } : x) }))} />
+            <input value={pr.target ?? ""} placeholder="Target" onChange={(e) => setData((p: any) => ({ ...p, prs: p.prs.map((x: any, j: number) => j === i ? { ...x, target: e.target.value } : x) }))} />
+            <input value={pr.unit ?? ""} placeholder="Unit" onChange={(e) => setData((p: any) => ({ ...p, prs: p.prs.map((x: any, j: number) => j === i ? { ...x, unit: e.target.value } : x) }))} />
+            <Btn onClick={() => setData((p: any) => ({ ...p, prs: p.prs.filter((_: any, j: number) => j !== i) }))} variant="danger">✕</Btn>
+          </div>
+        ))}
+        <Btn onClick={() => setData((p: any) => ({ ...p, prs: [...(p.prs ?? []), { label: "", current: "", target: "", unit: "kg" }] }))} variant="ghost">+ Add PR Metric</Btn>
+      </Section>
+    </div>
+  );
+}
+
 // ─── Main Admin Page ─────────────────────────────────────────────────────────
 export default function AdminPage() {
-  const [tab, setTab] = useState<"weeks" | "settings" | "data">("weeks");
+  const [tab, setTab] = useState<"weeks" | "settings" | "results" | "data">("weeks");
   const [weeks, setWeeks] = useState<any[]>([]);
   const [settings, setSettings] = useState<any>(null);
   const [activeWeekNum, setActiveWeekNum] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [seeding, setSeeding] = useState(false);
   const [loadError, setLoadError] = useState("");
+  const [hasUnsaved, setHasUnsaved] = useState(false);
+  const saveActiveRef = useRef<(() => Promise<void>) | null>(null);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [confirmMessage, setConfirmMessage] = useState("");
+  const confirmResolver = useRef<((v: boolean) => void) | null>(null);
 
   useEffect(() => {
     async function load() {
@@ -668,6 +759,67 @@ export default function AdminPage() {
     setSettings(updated);
   }
 
+  async function handleLeave(action: () => void) {
+    if (!hasUnsaved) {
+      action();
+      return;
+    }
+    const saveFirst = await askConfirm("You have unsaved changes. Save before leaving?");
+    if (saveFirst && saveActiveRef.current) {
+      await saveActiveRef.current();
+    }
+    setHasUnsaved(false);
+    action();
+  }
+
+  function askConfirm(message: string) {
+    setConfirmMessage(message);
+    setConfirmOpen(true);
+    return new Promise<boolean>((resolve) => {
+      confirmResolver.current = resolve;
+    });
+  }
+
+  function handleConfirmResult(value: boolean) {
+    setConfirmOpen(false);
+    const resolver = confirmResolver.current;
+    confirmResolver.current = null;
+    resolver?.(value);
+  }
+
+  useEffect(() => {
+    function onBeforeUnload(e: BeforeUnloadEvent) {
+      if (!hasUnsaved) return;
+      e.preventDefault();
+      e.returnValue = "";
+    }
+    window.addEventListener("beforeunload", onBeforeUnload);
+    return () => window.removeEventListener("beforeunload", onBeforeUnload);
+  }, [hasUnsaved]);
+
+  useEffect(() => {
+    function onDocClick(e: MouseEvent) {
+      if (!hasUnsaved) return;
+      const target = e.target as HTMLElement | null;
+      const anchor = target?.closest?.("a") as HTMLAnchorElement | null;
+      if (!anchor?.href) return;
+      if (anchor.target === "_blank" || e.metaKey || e.ctrlKey) return;
+      const url = new URL(anchor.href, window.location.origin);
+      if (url.origin !== window.location.origin) return;
+      if (url.pathname === window.location.pathname && url.search === window.location.search) return;
+      // Block navigation immediately in capture phase so router/browser cannot proceed first.
+      e.preventDefault();
+      e.stopPropagation();
+      (e as any).stopImmediatePropagation?.();
+      const nextHref = url.pathname + url.search + url.hash;
+      void handleLeave(() => {
+        window.location.assign(nextHref);
+      });
+    }
+    document.addEventListener("click", onDocClick, true);
+    return () => document.removeEventListener("click", onDocClick, true);
+  }, [hasUnsaved]);
+
   async function seed() {
     setSeeding(true);
     await fetch("/api/seed", { method: "POST" });
@@ -721,10 +873,10 @@ export default function AdminPage() {
 
       {/* Tabs */}
       <div style={{ display: "flex", gap: "4px", padding: "16px var(--page-pad)", borderBottom: "1px solid var(--border)", overflowX: "auto" }}>
-        {(["weeks", "settings", "data"] as const).map(t => (
+        {(["weeks", "settings", "results", "data"] as const).map(t => (
           <button
             key={t}
-            onClick={() => setTab(t)}
+            onClick={() => handleLeave(() => setTab(t))}
             style={{
               fontFamily: "'DM Mono', monospace",
               fontSize: "14px",
@@ -738,7 +890,7 @@ export default function AdminPage() {
               cursor: "pointer",
             }}
           >
-            {t === "weeks" ? "Weeks & Workouts" : t === "settings" ? "Athlete Settings" : "Data Management"}
+            {t === "weeks" ? "Weeks & Workouts" : t === "settings" ? "Athlete Settings" : t === "results" ? "Results Board" : "Data Management"}
           </button>
         ))}
       </div>
@@ -780,6 +932,10 @@ export default function AdminPage() {
                 week={activeWeek}
                 onSave={saveWeek}
                 onDelete={() => deleteWeek(activeWeek.number)}
+                onDirtyChange={setHasUnsaved}
+                onRegisterSave={(fn) => {
+                  saveActiveRef.current = fn;
+                }}
               />
             ) : (
               <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "14px", color: "var(--muted)", textAlign: "center", padding: "60px 0" }}>
@@ -791,7 +947,26 @@ export default function AdminPage() {
 
         {/* Settings tab */}
         {tab === "settings" && settings && (
-          <SettingsEditor settings={settings} onSave={saveSettings} />
+          <SettingsEditor
+            settings={settings}
+            onSave={saveSettings}
+            onDirtyChange={setHasUnsaved}
+            onRegisterSave={(fn) => {
+              saveActiveRef.current = fn;
+            }}
+          />
+        )}
+
+        {/* Results tab */}
+        {tab === "results" && settings && (
+          <ResultsEditor
+            settings={settings}
+            onSave={saveSettings}
+            onDirtyChange={setHasUnsaved}
+            onRegisterSave={(fn) => {
+              saveActiveRef.current = fn;
+            }}
+          />
         )}
 
         {/* Data tab */}
@@ -799,6 +974,27 @@ export default function AdminPage() {
           <DataTab />
         )}
       </div>
+
+      {confirmOpen && (
+        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.72)", zIndex: 1400, display: "flex", alignItems: "center", justifyContent: "center", padding: "20px" }}>
+          <div style={{ width: "min(480px, 92vw)", background: "var(--surface)", border: "1px solid var(--border2)", borderRadius: "6px", padding: "18px" }}>
+            <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "34px", letterSpacing: "2px", marginBottom: "8px" }}>
+              UNSAVED <span style={{ color: "var(--accent)" }}>CHANGES</span>
+            </div>
+            <div style={{ fontFamily: "'DM Mono', monospace", color: "var(--text2)", fontSize: "13px", lineHeight: 1.6 }}>
+              {confirmMessage}
+            </div>
+            <div style={{ marginTop: "16px", display: "flex", gap: "8px", justifyContent: "flex-end" }}>
+              <button onClick={() => handleConfirmResult(false)} style={{ background: "transparent", border: "1px solid var(--border2)", color: "var(--muted)", padding: "10px 14px" }}>
+                Discard
+              </button>
+              <button onClick={() => handleConfirmResult(true)} style={{ background: "var(--accent)", border: "none", color: "#000", padding: "10px 14px", fontFamily: "'DM Mono', monospace", letterSpacing: "1px", textTransform: "uppercase" }}>
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -10,8 +10,10 @@ export default function Navbar() {
 
   const links = [
     { href: "/", label: "Dashboard" },
+    { href: "/calendar", label: "Calendar" },
     { href: "/program", label: "Programme" },
     { href: "/progress", label: "Progress" },
+    { href: "/results", label: "Results" },
     { href: "/admin", label: "Admin" },
   ];
 

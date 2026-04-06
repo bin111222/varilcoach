@@ -1,0 +1,11 @@
+---
+description: Keep document scroll at top on load; avoid accidental window scroll from embedded UI
+alwaysApply: true
+---
+
+# Page scroll on load
+
+- Opening any route should not move the main document scroll unless the user scrolled or the route intentionally restores a hash/anchor.
+- **Do not** use `Element.scrollIntoView()` for chat feeds, carousels, or other content inside a nested `overflow: auto` / `scroll` region — it can scroll **ancestors including `window`**, which pulls the page down on first paint.
+- **Do** scroll only the intended container: hold a ref on the scrollable element and set `scrollTop` / `scrollTo({ top: scrollHeight })` there, or use `scrollIntoView` with `block: "nearest"` only when you have verified it does not affect the document (prefer container scrolling).
+- For “stick to bottom” chat UX, skip auto-scroll when the thread is empty and there is no in-flight request, so the first render does not touch scroll.

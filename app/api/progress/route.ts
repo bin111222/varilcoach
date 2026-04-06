@@ -47,7 +47,7 @@ export async function PUT(req: Request) {
     if (!id) return NextResponse.json({ error: "id required" }, { status: 400 });
 
     const body = await req.json();
-    const allowedFields = ["energyIn", "energyOut", "sessionNotes", "mmaLog"];
+    const allowedFields = ["energyIn", "energyOut", "sessionNotes", "mmaLog", "exercises"];
     const update: Record<string, unknown> = {};
 
     for (const key of allowedFields) {

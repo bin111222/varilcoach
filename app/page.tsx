@@ -25,6 +25,40 @@ const JS_DAY_MAP: Record<number, string> = {
   6: "sat",
 };
 
+type LoggedExercise = {
+  exerciseName: string;
+  sets: Array<{ reps: string; weight: string; rpe?: number }>;
+  notes: string;
+};
+
+function parseSetCount(setsText: string) {
+  const match = String(setsText).match(/(\d+)\s*×/);
+  const count = match ? Number(match[1]) : 3;
+  return Math.min(Math.max(count, 1), 8);
+}
+
+function parseRepText(setsText: string) {
+  const match = String(setsText).match(/×\s*([^\n]+)/);
+  return match ? match[1].trim() : "";
+}
+
+function buildLoggedExercises(day: any): LoggedExercise[] {
+  if (!day?.exercises?.length) return [];
+  return day.exercises.map((ex: any) => {
+    const setCount = parseSetCount(ex.sets ?? "");
+    const repText = parseRepText(ex.sets ?? "");
+    return {
+      exerciseName: ex.name ?? "Exercise",
+      sets: Array.from({ length: setCount }, () => ({
+        reps: repText,
+        weight: ex.load ?? "BW",
+        rpe: ex.rpe ?? undefined,
+      })),
+      notes: "",
+    };
+  });
+}
+
 async function fetchJsonWithTimeout(url: string, timeoutMs = 12000) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
@@ -51,6 +85,7 @@ export default function Dashboard() {
   });
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [loggedExercises, setLoggedExercises] = useState<LoggedExercise[]>([]);
 
   const todayId = JS_DAY_MAP[new Date().getDay()];
 
@@ -98,7 +133,7 @@ export default function Dashboard() {
         dayName: todaySession.name,
         sessionType: todaySession.type,
         ...logForm,
-        exercises: [],
+        exercises: loggedExercises,
       }),
     });
     setSaving(false);
@@ -108,6 +143,15 @@ export default function Dashboard() {
     const pRes = await fetch("/api/progress");
     const p = await pRes.json();
     setRecentProgress(Array.isArray(p) ? p.slice(0, 5) : []);
+  }
+
+  function toggleLog() {
+    if (logOpen) {
+      setLogOpen(false);
+      return;
+    }
+    setLoggedExercises(buildLoggedExercises(todaySession));
+    setLogOpen(true);
   }
 
   if (loading) {
@@ -393,7 +437,7 @@ export default function Dashboard() {
                   Full Session →
                 </Link>
                 <button
-                  onClick={() => setLogOpen(!logOpen)}
+                  onClick={toggleLog}
                   style={{
                     fontFamily: "'DM Mono', monospace",
                     fontSize: "14px",
@@ -454,6 +498,68 @@ export default function Dashboard() {
                       <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "32px", color: "var(--accent)" }}>{logForm.energyOut}</div>
                     </div>
                   </div>
+                  {loggedExercises.length > 0 && (
+                    <div style={{ marginBottom: "20px" }}>
+                      <label style={{ display: "block", fontFamily: "'DM Mono', monospace", fontSize: "15px", letterSpacing: "2px", textTransform: "uppercase", color: "var(--muted)", marginBottom: "10px" }}>
+                        Exercises Performed
+                      </label>
+                      <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                        {loggedExercises.map((ex, exIdx) => (
+                          <div key={`${ex.exerciseName}-${exIdx}`} style={{ border: "1px solid var(--border)", background: "var(--surface2)", padding: "12px", borderRadius: "2px" }}>
+                            <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "14px", color: "var(--text)", marginBottom: "8px" }}>
+                              {ex.exerciseName}
+                            </div>
+                            <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                              {ex.sets.map((s, setIdx) => (
+                                <div key={setIdx} style={{ display: "grid", gridTemplateColumns: "70px 1fr 1fr 1fr", gap: "10px", alignItems: "center" }}>
+                                  <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "12px", color: "var(--muted)" }}>
+                                    Set {setIdx + 1}
+                                  </span>
+                                  <div style={{ position: "relative" }}>
+                                    <input
+                                      value={s.reps}
+                                      onChange={e => setLoggedExercises(prev => prev.map((p, i) => i === exIdx ? { ...p, sets: p.sets.map((ps, si) => si === setIdx ? { ...ps, reps: e.target.value } : ps) } : p))}
+                                      placeholder="Reps"
+                                      style={{ width: "100%", paddingRight: "35px" }}
+                                    />
+                                    <span style={{ position: "absolute", right: "8px", top: "50%", transform: "translateY(-50%)", fontSize: "9px", color: "rgba(255,255,255,0.15)", pointerEvents: "none", fontFamily: "'DM Mono', monospace" }}>REPS</span>
+                                  </div>
+                                  <div style={{ position: "relative" }}>
+                                    <input
+                                      value={s.weight}
+                                      onChange={e => setLoggedExercises(prev => prev.map((p, i) => i === exIdx ? { ...p, sets: p.sets.map((ps, si) => si === setIdx ? { ...ps, weight: e.target.value } : ps) } : p))}
+                                      placeholder="Load"
+                                      style={{ width: "100%", paddingRight: "35px" }}
+                                    />
+                                    <span style={{ position: "absolute", right: "8px", top: "50%", transform: "translateY(-50%)", fontSize: "9px", color: "rgba(255,255,255,0.15)", pointerEvents: "none", fontFamily: "'DM Mono', monospace" }}>LOAD</span>
+                                  </div>
+                                  <div style={{ position: "relative" }}>
+                                    <input
+                                      type="number"
+                                      min={1}
+                                      max={10}
+                                      value={s.rpe ?? ""}
+                                      onChange={e => setLoggedExercises(prev => prev.map((p, i) => i === exIdx ? { ...p, sets: p.sets.map((ps, si) => si === setIdx ? { ...ps, rpe: e.target.value ? Number(e.target.value) : undefined } : ps) } : p))}
+                                      placeholder="RPE"
+                                      style={{ width: "100%", paddingRight: "30px" }}
+                                    />
+                                    <span style={{ position: "absolute", right: "8px", top: "50%", transform: "translateY(-50%)", fontSize: "9px", color: "rgba(255,255,255,0.15)", pointerEvents: "none", fontFamily: "'DM Mono', monospace" }}>RPE</span>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                            <textarea
+                              value={ex.notes}
+                              onChange={e => setLoggedExercises(prev => prev.map((p, i) => i === exIdx ? { ...p, notes: e.target.value } : p))}
+                              placeholder="Exercise note (optional)"
+                              rows={2}
+                              style={{ width: "100%", resize: "vertical", marginTop: "10px" }}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                   {todaySession.type === "mma" && (
                     <div style={{ marginBottom: "16px" }}>
                       <label style={{ display: "block", fontFamily: "'DM Mono', monospace", fontSize: "15px", letterSpacing: "2px", textTransform: "uppercase", color: "var(--muted)", marginBottom: "8px" }}>
