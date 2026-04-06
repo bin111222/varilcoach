@@ -114,7 +114,6 @@ export default function Navbar() {
                 textTransform: "uppercase",
                 color: "var(--muted)",
                 background: "none",
-                border: "none",
                 cursor: "pointer",
                 padding: "6px 12px",
                 borderRadius: "2px",

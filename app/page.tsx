@@ -93,11 +93,41 @@ export default function Dashboard() {
   const todayId = JS_DAY_MAP[new Date().getDay()];
 
   useEffect(() => {
+    // Request notification permission on mount
+    if ('Notification' in window && Notification.permission === 'default') {
+      Notification.requestPermission();
+    }
+    
+    // Logic for motivation notification check
+    const checkMotivation = async (uid: string) => {
+      try {
+        const res = await fetch(`/api/workouts/motivation?userId=${uid}`);
+        const data = await res.json();
+        
+    if (data.motivation && data.motivation.recentPRs.length > 0) {
+      const pr = data.motivation.recentPRs[0];
+      if (Notification.permission === 'granted') {
+        const lastDate = new Date(pr.date).toLocaleDateString("en-GB", { day: 'numeric', month: 'short' });
+        new Notification('PR ALERT: ' + pr.exercise.toUpperCase(), {
+          body: `Hit ${pr.weight}kg × ${pr.reps} on ${lastDate}. Time to beat it today?`,
+          icon: '/icon-192.png',
+          badge: '/icon-192.png',
+        });
+      }
+    }
+      } catch (e) {
+        console.error("Motivation check failed", e);
+      }
+    };
+
     const id = localStorage.getItem("userId");
     const name = localStorage.getItem("username");
     if (!id) return;
     setUserId(id);
     setUsername(name);
+    
+    // Check for motivation PR after load
+    setTimeout(() => checkMotivation(id), 3000);
 
     async function load(uid: string) {
       try {

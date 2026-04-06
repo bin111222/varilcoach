@@ -1,3 +1,4 @@
+import withPWA from 'next-pwa';
 import type { NextConfig } from "next";
 import path from "path";
 
@@ -10,4 +11,11 @@ const nextConfig: NextConfig = {
   outputFileTracingRoot: path.join(__dirname),
 };
 
-export default nextConfig;
+const pwaConfig = withPWA({
+  dest: 'public',
+  register: true,
+  skipWaiting: true,
+  disable: process.env.NODE_ENV === 'development',
+});
+
+export default pwaConfig(nextConfig);
