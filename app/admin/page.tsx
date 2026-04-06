@@ -133,12 +133,12 @@ function ExerciseEditor({
             </div>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))", gap: "12px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: "12px" }}>
             <Field label="Sets × Reps">
-              <input value={ex.sets} onChange={e => updateEx(i, "sets", e.target.value)} style={{ width: "100%" }} placeholder="3 × 8" />
+              <input value={ex.sets} onChange={e => updateEx(i, "sets", e.target.value)} style={{ width: "100%", fontSize: "14px" }} placeholder="3 × 8" />
             </Field>
             <Field label="Load">
-              <input value={ex.load} onChange={e => updateEx(i, "load", e.target.value)} style={{ width: "100%" }} placeholder="BW or 20 kg" />
+              <input value={ex.load} onChange={e => updateEx(i, "load", e.target.value)} style={{ width: "100%", fontSize: "14px" }} placeholder="BW or 20 kg" />
             </Field>
             <Field label={`RPE: ${ex.rpe}`}>
               <input type="range" min={1} max={10} value={ex.rpe}
@@ -147,12 +147,12 @@ function ExerciseEditor({
               />
             </Field>
             <Field label="Progression">
-              <input value={ex.progression ?? ""} onChange={e => updateEx(i, "progression", e.target.value)} style={{ width: "100%" }} placeholder="↑ +5kg" />
+              <input value={ex.progression ?? ""} onChange={e => updateEx(i, "progression", e.target.value)} style={{ width: "100%", fontSize: "14px" }} placeholder="↑ +5kg" />
             </Field>
           </div>
 
           <Field label="Notes">
-            <input value={ex.notes} onChange={e => updateEx(i, "notes", e.target.value)} style={{ width: "100%" }} placeholder="Coaching note..." />
+            <input value={ex.notes} onChange={e => updateEx(i, "notes", e.target.value)} style={{ width: "100%", fontSize: "14px" }} placeholder="Coaching note..." />
           </Field>
 
           <div style={{ display: "flex", gap: "16px", alignItems: "center" }}>
@@ -418,14 +418,14 @@ function WeekEditor({ week, onSave, onDelete, onDirtyChange, onRegisterSave }: {
       <div style={{ display: "grid", gridTemplateColumns: "var(--two-col)", gap: "24px", marginBottom: "32px" }}>
         <div>
           <Field label="Subtitle">
-            <input value={data.subtitle ?? ""} onChange={e => setData((p: any) => ({ ...p, subtitle: e.target.value }))} style={{ width: "100%" }} />
+            <input value={data.subtitle ?? ""} onChange={e => setData((p: any) => ({ ...p, subtitle: e.target.value }))} style={{ width: "100%", fontSize: "14px" }} />
           </Field>
         </div>
         <div>
-          <Field label="Priority Stack / Adjustments (one per line)">
+          <Field label="Priority Stack (one per line)">
             {(data.priorityStack ?? []).map((item: string, i: number) => (
               <div key={i} style={{ display: "flex", gap: "8px", marginBottom: "6px" }}>
-                <input value={item} onChange={e => updateListItem("priorityStack", i, e.target.value)} style={{ flex: 1 }} />
+                <input value={item} onChange={e => updateListItem("priorityStack", i, e.target.value)} style={{ flex: 1, fontSize: "14px" }} />
                 <Btn onClick={() => removeListItem("priorityStack", i)} variant="danger">✕</Btn>
               </div>
             ))}
@@ -436,10 +436,10 @@ function WeekEditor({ week, onSave, onDelete, onDirtyChange, onRegisterSave }: {
 
       <div style={{ display: "grid", gridTemplateColumns: "var(--two-col)", gap: "24px", marginBottom: "32px" }}>
         <div>
-          <Field label="Banner Items (shown as progress strip)">
+          <Field label="Banner Items">
             {(data.bannerItems ?? []).map((item: string, i: number) => (
               <div key={i} style={{ display: "flex", gap: "8px", marginBottom: "6px" }}>
-                <input value={item} onChange={e => updateListItem("bannerItems", i, e.target.value)} style={{ flex: 1 }} />
+                <input value={item} onChange={e => updateListItem("bannerItems", i, e.target.value)} style={{ flex: 1, fontSize: "14px" }} />
                 <Btn onClick={() => removeListItem("bannerItems", i)} variant="danger">✕</Btn>
               </div>
             ))}
@@ -447,19 +447,19 @@ function WeekEditor({ week, onSave, onDelete, onDirtyChange, onRegisterSave }: {
           </Field>
         </div>
         <div>
-          <Field label="Flags (coaching notes at bottom)">
+          <Field label="Flags">
             {(data.flags ?? []).map((item: string, i: number) => (
               <div key={i} style={{ display: "flex", gap: "8px", marginBottom: "6px" }}>
-                <input value={item} onChange={e => updateListItem("flags", i, e.target.value)} style={{ flex: 1 }} />
+                <input value={item} onChange={e => updateListItem("flags", i, e.target.value)} style={{ flex: 1, fontSize: "14px" }} />
                 <Btn onClick={() => removeListItem("flags", i)} variant="danger">✕</Btn>
               </div>
             ))}
             <Btn onClick={() => addListItem("flags")} variant="ghost">+ Add</Btn>
           </Field>
-          <Field label="Warning Flags (shown in orange)">
+          <Field label="Warning Flags">
             {(data.warnFlags ?? []).map((item: string, i: number) => (
               <div key={i} style={{ display: "flex", gap: "8px", marginBottom: "6px" }}>
-                <input value={item} onChange={e => updateListItem("warnFlags", i, e.target.value)} style={{ flex: 1 }} />
+                <input value={item} onChange={e => updateListItem("warnFlags", i, e.target.value)} style={{ flex: 1, fontSize: "14px" }} />
                 <Btn onClick={() => removeListItem("warnFlags", i)} variant="danger">✕</Btn>
               </div>
             ))}
@@ -658,11 +658,11 @@ function ResultsEditor({ settings, onSave, onDirtyChange, onRegisterSave }: { se
 
       <Section title="PR Board">
         {(data.prs ?? []).map((pr: any, i: number) => (
-          <div key={i} style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 80px auto", gap: "8px", marginBottom: "8px", alignItems: "end" }}>
-            <input value={pr.label ?? ""} placeholder="Metric" onChange={(e) => setData((p: any) => ({ ...p, prs: p.prs.map((x: any, j: number) => j === i ? { ...x, label: e.target.value } : x) }))} />
-            <input value={pr.current ?? ""} placeholder="Current" onChange={(e) => setData((p: any) => ({ ...p, prs: p.prs.map((x: any, j: number) => j === i ? { ...x, current: e.target.value } : x) }))} />
-            <input value={pr.target ?? ""} placeholder="Target" onChange={(e) => setData((p: any) => ({ ...p, prs: p.prs.map((x: any, j: number) => j === i ? { ...x, target: e.target.value } : x) }))} />
-            <input value={pr.unit ?? ""} placeholder="Unit" onChange={(e) => setData((p: any) => ({ ...p, prs: p.prs.map((x: any, j: number) => j === i ? { ...x, unit: e.target.value } : x) }))} />
+          <div key={i} style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(100px, 1fr))", gap: "8px", marginBottom: "16px", borderBottom: "1px solid rgba(255,255,255,0.05)", paddingBottom: "12px", alignItems: "end" }}>
+            <input value={pr.label ?? ""} placeholder="Metric" onChange={(e) => setData((p: any) => ({ ...p, prs: p.prs.map((x: any, j: number) => j === i ? { ...x, label: e.target.value } : x) }))} style={{ fontSize: "14px" }} />
+            <input value={pr.current ?? ""} placeholder="Current" onChange={(e) => setData((p: any) => ({ ...p, prs: p.prs.map((x: any, j: number) => j === i ? { ...x, current: e.target.value } : x) }))} style={{ fontSize: "14px" }} />
+            <input value={pr.target ?? ""} placeholder="Target" onChange={(e) => setData((p: any) => ({ ...p, prs: p.prs.map((x: any, j: number) => j === i ? { ...x, target: e.target.value } : x) }))} style={{ fontSize: "14px" }} />
+            <input value={pr.unit ?? ""} placeholder="Unit" onChange={(e) => setData((p: any) => ({ ...p, prs: p.prs.map((x: any, j: number) => j === i ? { ...x, unit: e.target.value } : x) }))} style={{ fontSize: "14px" }} />
             <Btn onClick={() => setData((p: any) => ({ ...p, prs: p.prs.filter((_: any, j: number) => j !== i) }))} variant="danger">✕</Btn>
           </div>
         ))}
@@ -876,47 +876,48 @@ export default function AdminPage() {
   return (
     <div style={{ maxWidth: "1400px", margin: "0 auto" }}>
       {/* Header */}
-      <div style={{ padding: "48px var(--page-pad) 32px", borderBottom: "1px solid var(--border)", display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: "16px" }}>
+      <div style={{ padding: "var(--section-padding) var(--page-pad) 32px", borderBottom: "1px solid var(--border)", display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: "16px" }}>
         <div>
-          <h1 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "56px", lineHeight: "0.9", letterSpacing: "2px" }}>
+          <h1 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "var(--header-font-size)", lineHeight: "0.9", letterSpacing: "2px" }}>
             ADMIN <span style={{ color: "var(--accent)" }}>PANEL</span>
           </h1>
-          <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "14px", letterSpacing: "2px", textTransform: "uppercase", color: "var(--muted)", marginTop: "10px" }}>
-            Edit everything — live changes to MongoDB
+          <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "12px", letterSpacing: "2px", textTransform: "uppercase", color: "var(--muted)", marginTop: "10px" }}>
+            Edit everything live
           </div>
         </div>
         <div style={{ display: "flex", gap: "8px" }}>
           <Btn onClick={seed} variant="ghost" disabled={seeding}>
-            {seeding ? "Seeding..." : "Re-seed W1+W2"}
+            {seeding ? "Seeding..." : "Seed W1+W2"}
           </Btn>
         </div>
       </div>
 
       {/* Tabs */}
-      <div style={{ display: "flex", gap: "4px", padding: "16px var(--page-pad)", borderBottom: "1px solid var(--border)", overflowX: "auto" }}>
+      <div style={{ display: "flex", gap: "4px", padding: "16px var(--page-pad)", borderBottom: "1px solid var(--border)", overflowX: "auto", WebkitOverflowScrolling: "touch" }}>
         {(["weeks", "settings", "results", "data"] as const).map(t => (
           <button
             key={t}
             onClick={() => handleLeave(() => setTab(t))}
             style={{
               fontFamily: "'DM Mono', monospace",
-              fontSize: "14px",
+              fontSize: "11px",
               letterSpacing: "2px",
               textTransform: "uppercase",
-              padding: "6px 16px",
+              padding: "6px 12px",
               border: `1px solid ${tab === t ? "var(--accent)" : "var(--border2)"}`,
               background: tab === t ? "rgba(200,245,66,0.06)" : "transparent",
               color: tab === t ? "var(--accent)" : "var(--muted)",
               borderRadius: "2px",
               cursor: "pointer",
+              whiteSpace: "nowrap"
             }}
           >
-            {t === "weeks" ? "Weeks & Workouts" : t === "settings" ? "Athlete Settings" : t === "results" ? "Results Board" : "Data Management"}
+            {t === "weeks" ? "Weeks" : t === "settings" ? "Athlete" : t === "results" ? "Results" : "Data"}
           </button>
         ))}
       </div>
 
-      <div style={{ padding: "40px var(--page-pad) 80px" }}>
+      <div style={{ padding: "32px var(--page-pad) 80px" }}>
         {/* Weeks tab */}
         {tab === "weeks" && (
           <div>

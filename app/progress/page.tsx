@@ -108,11 +108,11 @@ export default function ProgressPage() {
   return (
     <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
       {/* Header */}
-      <div style={{ padding: "48px var(--page-pad) 32px", borderBottom: "1px solid var(--border)" }}>
-        <h1 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "56px", lineHeight: "0.9", letterSpacing: "2px" }}>
+      <div style={{ padding: "var(--section-padding) var(--page-pad) 32px", borderBottom: "1px solid var(--border)" }}>
+        <h1 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "var(--header-font-size)", lineHeight: "0.9", letterSpacing: "2px" }}>
           PROGRESS <span style={{ color: "var(--accent)" }}>LOG</span>
         </h1>
-        <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "14px", letterSpacing: "2px", textTransform: "uppercase", color: "var(--muted)", marginTop: "10px" }}>
+        <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "12px", letterSpacing: "2px", textTransform: "uppercase", color: "var(--muted)", marginTop: "10px" }}>
           {logs.length} sessions logged
         </div>
       </div>
@@ -120,18 +120,18 @@ export default function ProgressPage() {
       <div style={{ padding: "32px var(--page-pad) 60px" }}>
         {/* Stats */}
         {logs.length > 0 && (
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: "16px", marginBottom: "40px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: "16px", marginBottom: "40px" }}>
             {[
               { label: "Total Sessions", value: String(filtered.length), sub: "" },
               { label: "Avg Energy In", value: avgEnergyIn, sub: "/ 10" },
               { label: "Avg Energy Out", value: avgEnergyOut, sub: "/ 10" },
               { label: "Weeks Logged", value: String(weeks.length), sub: "" },
             ].map((stat, i) => (
-              <div key={i} style={{ background: "var(--surface)", border: "1px solid var(--border)", padding: "20px", borderRadius: "2px", position: "relative", overflow: "hidden" }}>
+              <div key={i} style={{ background: "var(--surface)", border: "1px solid var(--border)", padding: "16px", borderRadius: "2px", position: "relative", overflow: "hidden" }}>
                 <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "2px", background: "var(--accent)" }} />
-                <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "15px", letterSpacing: "2px", textTransform: "uppercase", color: "var(--muted)", marginBottom: "8px" }}>{stat.label}</div>
-                <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "40px", color: "var(--accent)", lineHeight: "1" }}>
-                  {stat.value}<span style={{ fontSize: "18px", color: "var(--muted)" }}>{stat.sub}</span>
+                <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "13px", letterSpacing: "2px", textTransform: "uppercase", color: "var(--muted)", marginBottom: "8px" }}>{stat.label}</div>
+                <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "32px", color: "var(--accent)", lineHeight: "1" }}>
+                  {stat.value}<span style={{ fontSize: "16px", color: "var(--muted)" }}>{stat.sub}</span>
                 </div>
               </div>
             ))}
@@ -140,17 +140,17 @@ export default function ProgressPage() {
 
         {/* Filters */}
         <div style={{ display: "flex", gap: "12px", marginBottom: "24px", alignItems: "center", flexWrap: "wrap" }}>
-          <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "15px", letterSpacing: "2px", textTransform: "uppercase", color: "var(--muted)" }}>Filter:</span>
-          <select value={filterWeek} onChange={e => setFilterWeek(e.target.value)} style={{ width: "auto" }}>
+          <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "14px", letterSpacing: "2px", textTransform: "uppercase", color: "var(--muted)" }}>Filter:</span>
+          <select value={filterWeek} onChange={e => setFilterWeek(e.target.value)} style={{ width: "100%", maxWidth: "150px", fontSize: "14px" }}>
             <option value="">All Weeks</option>
             {weeks.map(w => <option key={w} value={String(w)}>Week {w}</option>)}
           </select>
-          <select value={filterType} onChange={e => setFilterType(e.target.value)} style={{ width: "auto" }}>
+          <select value={filterType} onChange={e => setFilterType(e.target.value)} style={{ width: "100%", maxWidth: "150px", fontSize: "14px" }}>
             <option value="">All Types</option>
             {types.map(t => <option key={t} value={t}>{t}</option>)}
           </select>
           {(filterWeek || filterType) && (
-            <button onClick={() => { setFilterWeek(""); setFilterType(""); }} style={{ background: "none", border: "1px solid var(--border2)", color: "var(--muted)", padding: "6px 12px", borderRadius: "2px", fontFamily: "'DM Mono', monospace", fontSize: "15px", letterSpacing: "1px", cursor: "pointer" }}>
+            <button onClick={() => { setFilterWeek(""); setFilterType(""); }} style={{ background: "none", border: "1px solid var(--border2)", color: "var(--muted)", padding: "6px 12px", borderRadius: "2px", fontFamily: "'DM Mono', monospace", fontSize: "14px", letterSpacing: "1px", cursor: "pointer" }}>
               Clear
             </button>
           )}
@@ -296,24 +296,24 @@ export default function ProgressPage() {
             </div>
 
             <div style={{ display: "grid", gap: "24px" }}>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))", gap: "20px" }}>
                 <div>
-                  <label style={{ display: "block", fontFamily: "'DM Mono', monospace", fontSize: "14px", color: "var(--muted)", marginBottom: "8px", textTransform: "uppercase", letterSpacing: "1px" }}>Energy In</label>
+                  <label style={{ display: "block", fontFamily: "'DM Mono', monospace", fontSize: "13px", color: "var(--muted)", marginBottom: "8px", textTransform: "uppercase", letterSpacing: "1px" }}>Energy In</label>
                   <input 
                     type="number" min={1} max={10} 
                     value={editForm.energyIn} 
                     onChange={e => setEditForm(f => ({ ...f, energyIn: Number(e.target.value) }))} 
-                    style={{ width: "100%", padding: "12px", background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "2px", color: "var(--text)" }}
+                    style={{ width: "100%", padding: "12px", background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "2px", color: "var(--text)", fontSize: "14px" }}
                     placeholder="1-10"
                   />
                 </div>
                 <div>
-                  <label style={{ display: "block", fontFamily: "'DM Mono', monospace", fontSize: "14px", color: "var(--muted)", marginBottom: "8px", textTransform: "uppercase", letterSpacing: "1px" }}>Energy Out</label>
+                  <label style={{ display: "block", fontFamily: "'DM Mono', monospace", fontSize: "13px", color: "var(--muted)", marginBottom: "8px", textTransform: "uppercase", letterSpacing: "1px" }}>Energy Out</label>
                   <input 
                     type="number" min={1} max={10} 
                     value={editForm.energyOut} 
                     onChange={e => setEditForm(f => ({ ...f, energyOut: Number(e.target.value) }))} 
-                    style={{ width: "100%", padding: "12px", background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "2px", color: "var(--text)" }}
+                    style={{ width: "100%", padding: "12px", background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "2px", color: "var(--text)", fontSize: "14px" }}
                     placeholder="1-10"
                   />
                 </div>
@@ -321,17 +321,17 @@ export default function ProgressPage() {
 
               {editForm.exercises.length > 0 && (
                 <div>
-                  <label style={{ display: "block", fontFamily: "'DM Mono', monospace", fontSize: "14px", color: "var(--muted)", marginBottom: "12px", textTransform: "uppercase", letterSpacing: "1px" }}>Exercises</label>
+                  <label style={{ display: "block", fontFamily: "'DM Mono', monospace", fontSize: "13px", color: "var(--muted)", marginBottom: "12px", textTransform: "uppercase", letterSpacing: "1px" }}>Exercises</label>
                   <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
                     {editForm.exercises.map((ex, exIdx) => (
                       <div key={exIdx} style={{ background: "rgba(255,255,255,0.02)", border: "1px solid var(--border)", padding: "16px", borderRadius: "2px" }}>
-                        <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "14px", color: "var(--accent)", marginBottom: "12px", borderBottom: "1px solid rgba(255,255,255,0.05)", paddingBottom: "8px" }}>
+                        <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "13px", color: "var(--accent)", marginBottom: "12px", borderBottom: "1px solid rgba(255,255,255,0.05)", paddingBottom: "8px" }}>
                           {ex.exerciseName}
                         </div>
                         <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
                           {ex.sets.map((s: any, setIdx: number) => (
-                            <div key={setIdx} style={{ display: "grid", gridTemplateColumns: "60px 1fr 1fr 60px", gap: "10px", alignItems: "center" }}>
-                              <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "12px", color: "var(--muted)" }}>Set {setIdx + 1}</span>
+                            <div key={setIdx} style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(100px, 1fr))", gap: "10px", alignItems: "center" }}>
+                              <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "11px", color: "var(--muted)" }}>Set {setIdx + 1}</span>
                               <div style={{ position: "relative" }}>
                                 <input
                                   value={s.reps}
@@ -340,10 +340,10 @@ export default function ProgressPage() {
                                     newExs[exIdx].sets[setIdx].reps = e.target.value;
                                     setEditForm(f => ({ ...f, exercises: newExs }));
                                   }}
-                                  style={{ width: "100%", padding: "8px", background: "rgba(0,0,0,0.2)", border: "1px solid var(--border2)", borderRadius: "2px", fontSize: "13px" }}
-                                  placeholder="Reps (e.g. 8)"
+                                  style={{ width: "100%", padding: "8px", background: "rgba(0,0,0,0.2)", border: "1px solid var(--border2)", borderRadius: "2px", fontSize: "12px" }}
+                                  placeholder="Reps"
                                 />
-                                <span style={{ position: "absolute", right: "8px", top: "50%", transform: "translateY(-50%)", fontSize: "10px", color: "rgba(255,255,255,0.2)", pointerEvents: "none" }}>REPS</span>
+                                <span style={{ position: "absolute", right: "8px", top: "50%", transform: "translateY(-50%)", fontSize: "8px", color: "rgba(255,255,255,0.2)", pointerEvents: "none" }}>REPS</span>
                               </div>
                               <div style={{ position: "relative" }}>
                                 <input
@@ -353,10 +353,10 @@ export default function ProgressPage() {
                                     newExs[exIdx].sets[setIdx].weight = e.target.value;
                                     setEditForm(f => ({ ...f, exercises: newExs }));
                                   }}
-                                  style={{ width: "100%", padding: "8px", background: "rgba(0,0,0,0.2)", border: "1px solid var(--border2)", borderRadius: "2px", fontSize: "13px" }}
-                                  placeholder="Load (e.g. 20kg)"
+                                  style={{ width: "100%", padding: "8px", background: "rgba(0,0,0,0.2)", border: "1px solid var(--border2)", borderRadius: "2px", fontSize: "12px" }}
+                                  placeholder="Load"
                                 />
-                                <span style={{ position: "absolute", right: "8px", top: "50%", transform: "translateY(-50%)", fontSize: "10px", color: "rgba(255,255,255,0.2)", pointerEvents: "none" }}>LOAD</span>
+                                <span style={{ position: "absolute", right: "8px", top: "50%", transform: "translateY(-50%)", fontSize: "8px", color: "rgba(255,255,255,0.2)", pointerEvents: "none" }}>LOAD</span>
                               </div>
                               <div style={{ position: "relative" }}>
                                 <input
@@ -367,10 +367,10 @@ export default function ProgressPage() {
                                     newExs[exIdx].sets[setIdx].rpe = e.target.value ? Number(e.target.value) : undefined;
                                     setEditForm(f => ({ ...f, exercises: newExs }));
                                   }}
-                                  style={{ width: "100%", padding: "8px", background: "rgba(0,0,0,0.2)", border: "1px solid var(--border2)", borderRadius: "2px", fontSize: "13px" }}
+                                  style={{ width: "100%", padding: "8px", background: "rgba(0,0,0,0.2)", border: "1px solid var(--border2)", borderRadius: "2px", fontSize: "12px" }}
                                   placeholder="RPE"
                                 />
-                                <span style={{ position: "absolute", right: "8px", top: "50%", transform: "translateY(-50%)", fontSize: "10px", color: "rgba(255,255,255,0.2)", pointerEvents: "none" }}>RPE</span>
+                                <span style={{ position: "absolute", right: "8px", top: "50%", transform: "translateY(-50%)", fontSize: "8px", color: "rgba(255,255,255,0.2)", pointerEvents: "none" }}>RPE</span>
                               </div>
                             </div>
                           ))}

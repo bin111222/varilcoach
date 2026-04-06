@@ -23,6 +23,7 @@ export default function Navbar() {
 
   const links = [
     { href: "/", label: "Dashboard" },
+    { href: "/tracker", label: "Tracker" },
     { href: "/calendar", label: "Calendar" },
     { href: "/program", label: "Programme" },
     { href: "/progress", label: "Progress" },
@@ -201,7 +202,7 @@ export default function Navbar() {
       )}
 
       <style>{`
-        @media (max-width: 640px) {
+        @media (max-width: 900px) {
           nav { padding: 0 24px !important; }
           .desktop-nav { display: none !important; }
           .mobile-toggle { display: block !important; }

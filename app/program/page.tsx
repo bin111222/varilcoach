@@ -105,7 +105,7 @@ function ProgramContent() {
     <div>
       {/* Header */}
       <div style={{
-        padding: "60px 48px 40px",
+        padding: "var(--section-padding) var(--page-pad) 40px",
         borderBottom: "1px solid var(--border)",
         display: "flex",
         justifyContent: "space-between",
@@ -121,7 +121,7 @@ function ProgramContent() {
           right: "-20px",
           top: "-30px",
           fontFamily: "'Bebas Neue', sans-serif",
-          fontSize: "280px",
+          fontSize: "clamp(120px, 20vw, 280px)",
           color: "#ffffff04",
           lineHeight: "1",
           pointerEvents: "none",
@@ -134,7 +134,7 @@ function ProgramContent() {
         <div>
           <h1 style={{
             fontFamily: "'Bebas Neue', sans-serif",
-            fontSize: "72px",
+            fontSize: "var(--header-font-size)",
             lineHeight: "0.9",
             letterSpacing: "2px",
           }}>
@@ -147,7 +147,7 @@ function ProgramContent() {
           </div>
         </div>
 
-        <div style={{ textAlign: "right", fontFamily: "'DM Mono', monospace", fontSize: "11px", color: "var(--muted)", letterSpacing: "1px", position: "relative", zIndex: 1 }}>
+        <div style={{ textAlign: "right", fontFamily: "'DM Mono', monospace", fontSize: "11px", color: "var(--muted)", letterSpacing: "1px", position: "relative", zIndex: 1, flex: "1 1 200px" }}>
           <div style={{ color: "var(--accent)", fontSize: "10px", letterSpacing: "2px", textTransform: "uppercase", marginBottom: "6px" }}>
             {currentWeek.number === 2 ? "Week 2 Adjustments" : "Priority Stack"}
           </div>
@@ -162,7 +162,7 @@ function ProgramContent() {
         <div style={{
           background: "linear-gradient(90deg, #0e1a00, #0a0a0a)",
           borderBottom: "1px solid var(--border)",
-          padding: "12px 48px",
+          padding: "12px var(--page-pad)",
           fontFamily: "'DM Mono', monospace",
           fontSize: "10px",
           letterSpacing: "2px",
@@ -179,7 +179,7 @@ function ProgramContent() {
       )}
 
       {/* Legend */}
-      <div style={{ display: "flex", gap: "24px", padding: "16px 48px", borderBottom: "1px solid var(--border)", flexWrap: "wrap" }}>
+      <div style={{ display: "flex", gap: "24px", padding: "16px var(--page-pad)", borderBottom: "1px solid var(--border)", flexWrap: "wrap" }}>
         {Object.entries(TYPE_COLORS).filter(([k]) => k !== "rest").map(([type, color]) => (
           <div key={type} style={{ display: "flex", alignItems: "center", gap: "8px", fontFamily: "'DM Mono', monospace", fontSize: "10px", letterSpacing: "2px", textTransform: "uppercase", color: "var(--muted)" }}>
             <div style={{ width: "8px", height: "8px", borderRadius: "50%", background: color }} />
@@ -189,29 +189,32 @@ function ProgramContent() {
       </div>
 
       {/* Week selector */}
-      <div style={{ display: "flex", gap: "8px", padding: "16px 48px", borderBottom: "1px solid var(--border)", alignItems: "center" }}>
-        <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "9px", letterSpacing: "2px", textTransform: "uppercase", color: "var(--muted)", marginRight: "8px" }}>
+      <div style={{ display: "flex", gap: "8px", padding: "16px var(--page-pad)", borderBottom: "1px solid var(--border)", alignItems: "center", overflowX: "auto" }}>
+        <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "9px", letterSpacing: "2px", textTransform: "uppercase", color: "var(--muted)", marginRight: "8px", flexShrink: 0 }}>
           Weeks:
         </span>
-        {weeks.map(w => (
-          <button
-            key={w.number}
-            onClick={() => switchWeek(w.number)}
-            style={{
-              fontFamily: "'DM Mono', monospace",
-              fontSize: "10px",
-              letterSpacing: "2px",
-              padding: "4px 12px",
-              border: "1px solid " + (currentWeek.number === w.number ? "var(--accent)" : "var(--border2)"),
-              background: currentWeek.number === w.number ? "rgba(200,245,66,0.06)" : "transparent",
-              color: currentWeek.number === w.number ? "var(--accent)" : "var(--muted)",
-              borderRadius: "2px",
-              cursor: "pointer",
-            }}
-          >
-            W{w.number}
-          </button>
-        ))}
+        <div style={{ display: "flex", gap: "8px" }}>
+          {weeks.map(w => (
+            <button
+              key={w.number}
+              onClick={() => switchWeek(w.number)}
+              style={{
+                fontFamily: "'DM Mono', monospace",
+                fontSize: "10px",
+                letterSpacing: "2px",
+                padding: "4px 12px",
+                border: "1px solid " + (currentWeek.number === w.number ? "var(--accent)" : "var(--border2)"),
+                background: currentWeek.number === w.number ? "rgba(200,245,66,0.06)" : "transparent",
+                color: currentWeek.number === w.number ? "var(--accent)" : "var(--muted)",
+                borderRadius: "2px",
+                cursor: "pointer",
+                whiteSpace: "nowrap"
+              }}
+            >
+              W{w.number}
+            </button>
+          ))}
+        </div>
         <Link
           href="/admin"
           style={{
@@ -224,6 +227,7 @@ function ProgramContent() {
             border: "1px solid var(--border2)",
             padding: "4px 10px",
             borderRadius: "2px",
+            flexShrink: 0
           }}
         >
           Edit →
@@ -231,7 +235,14 @@ function ProgramContent() {
       </div>
 
       {/* Day tabs */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", borderBottom: "1px solid var(--border)" }}>
+      <div style={{ 
+        display: "grid", 
+        gridTemplateColumns: "repeat(7, 1fr)", 
+        borderBottom: "1px solid var(--border)",
+        overflowX: "auto",
+        minWidth: "100%",
+        WebkitOverflowScrolling: "touch"
+      }}>
         {currentWeek.days?.map((day: any) => {
           const isActive = day.id === activeDayId;
           const color = TYPE_COLORS[day.type] ?? "var(--rest)";
@@ -249,6 +260,7 @@ function ProgramContent() {
                 textAlign: "left",
                 color,
                 transition: "background 0.15s",
+                minWidth: "80px"
               }}
             >
               {isActive && (
@@ -267,7 +279,7 @@ function ProgramContent() {
       </div>
 
       {/* Content */}
-      <div style={{ padding: "0 48px 60px" }}>
+      <div style={{ padding: "0 var(--page-pad) 60px" }}>
         {activeDay && (
           <div style={{ paddingTop: "40px" }}>
             <DayPanel day={activeDay} weekNumber={currentWeek.number} />

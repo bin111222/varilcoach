@@ -104,7 +104,7 @@ export default function DayPanel({ day, weekNumber }: { day: IDay; weekNumber: n
       <div style={{ display: "flex", alignItems: "baseline", gap: "20px", marginBottom: "32px", flexWrap: "wrap" }}>
         <h2 style={{
           fontFamily: "'Bebas Neue', sans-serif",
-          fontSize: "56px",
+          fontSize: "clamp(36px, 10vw, 56px)",
           lineHeight: "1",
           letterSpacing: "2px",
           color,

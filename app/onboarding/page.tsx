@@ -180,12 +180,13 @@ export default function OnboardingPage() {
 
         <h1 style={{
           fontFamily: "'Bebas Neue', sans-serif",
-          fontSize: "40px",
+          fontSize: "var(--header-font-size)",
           letterSpacing: "2px",
           marginBottom: "32px",
-          color: "var(--text)"
+          color: "var(--text)",
+          lineHeight: "0.9"
         }}>
-          ONBOARDING <span style={{ color: "var(--accent)" }}>STEP {step}</span>
+          ONBOARDING <br /> <span style={{ color: "var(--accent)" }}>STEP {step}</span>
         </h1>
 
         {error && (

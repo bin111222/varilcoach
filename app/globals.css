@@ -8,8 +8,11 @@
   --border: #222222;
   --border2: #2a2a2a;
   --accent: #c8f542;
+  --accent-rgb: 200, 245, 66;
   --accent2: #42d4f5;
+  --accent2-rgb: 66, 212, 245;
   --accent3: #f54242;
+  --accent3-rgb: 245, 66, 66;
   --text: #f0f0f0;
   --text2: #c7c7c7;
   --muted: #8a8a8a;
@@ -26,6 +29,8 @@
   --ai-panel-border-top: none;
   --two-col: 1fr 1fr;
   --dash-divider: 1px solid var(--border);
+  --header-font-size: 64px;
+  --section-padding: 48px;
 }
 
 * {
@@ -42,7 +47,7 @@ body {
   background: var(--bg);
   color: var(--text);
   font-family: 'DM Sans', sans-serif;
-  font-size: 18px;
+  font-size: 16px;
   min-height: 100vh;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
@@ -249,10 +254,12 @@ input:focus, textarea:focus, select:focus {
 
 @media (max-width: 900px) {
   :root {
-    --page-pad: 18px;
+    --page-pad: 20px;
     --dashboard-cols: 1fr;
     --ai-panel-border-top: 1px solid var(--border);
     --two-col: 1fr;
     --dash-divider: none;
+    --header-font-size: 40px;
+    --section-padding: 32px;
   }
 }

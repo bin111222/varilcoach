@@ -62,11 +62,12 @@ export default function LoginPage() {
       }}>
         <h1 style={{
           fontFamily: "'Bebas Neue', sans-serif",
-          fontSize: "48px",
+          fontSize: "var(--header-font-size)",
           letterSpacing: "2px",
           color: "var(--accent)",
           textAlign: "center",
-          marginBottom: "32px"
+          marginBottom: "32px",
+          lineHeight: "0.9"
         }}>
           COACH <span style={{ color: "var(--text)" }}>LOGIN</span>
         </h1>

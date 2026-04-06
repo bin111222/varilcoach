@@ -5,6 +5,7 @@ import { Settings } from "@/lib/models/Settings";
 import { Week } from "@/lib/models/Week";
 import { Progress } from "@/lib/models/Progress";
 import { ChatSession } from "@/lib/models/ChatSession";
+import { RateLimit } from "@/lib/models/RateLimit";
 
 export async function POST(req: Request) {
   try {
@@ -23,6 +24,35 @@ export async function POST(req: Request) {
     }
 
     await connectDB();
+
+    // --- Rate Limiting ---
+    const LIMIT = 10; // Max 10 requests
+    const WINDOW_MS = 60 * 1000; // per 1 minute
+    const now = new Date();
+
+    let rateLimit = await RateLimit.findOne({ userId });
+
+    if (rateLimit) {
+      const timeDiff = now.getTime() - rateLimit.lastRequest.getTime();
+      if (timeDiff < WINDOW_MS) {
+        if (rateLimit.count >= LIMIT) {
+          return NextResponse.json(
+            { error: "Slow down, coach! You've sent too many messages. Please try again in a minute." },
+            { status: 429 }
+          );
+        }
+        rateLimit.count += 1;
+      } else {
+        // Reset count if the window has passed
+        rateLimit.count = 1;
+      }
+      rateLimit.lastRequest = now;
+      await rateLimit.save();
+    } else {
+      await RateLimit.create({ userId, count: 1, lastRequest: now });
+    }
+    // ---------------------
+
     const settings = (await Settings.findOne({ userId }).lean()) as any;
     const currentWeek = settings?.currentWeek ?? 1;
     const weekData = (await Week.findOne({ number: currentWeek, userId }).lean()) as any;
@@ -32,7 +62,6 @@ export async function POST(req: Request) {
     const goals = settings?.goals ?? [];
     const injuries = settings?.injuries ?? "";
     const model = settings?.openaiModel ?? "gpt-4o";
-    const now = new Date();
     const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
     const nowIso = now.toISOString();
     const nowHuman = now.toLocaleString("en-GB", {

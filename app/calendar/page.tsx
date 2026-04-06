@@ -240,30 +240,30 @@ export default function CalendarPage() {
 
   return (
     <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "36px var(--page-pad) 80px" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px", flexWrap: "wrap", gap: "10px" }}>
-        <h1 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "56px", letterSpacing: "2px" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px", flexWrap: "wrap", gap: "16px" }}>
+        <h1 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "var(--header-font-size)", letterSpacing: "2px" }}>
           WORKOUT <span style={{ color: "var(--accent)" }}>CALENDAR</span>
         </h1>
         <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
           <button onClick={() => setActiveMonth(new Date(activeMonth.getFullYear(), activeMonth.getMonth() - 1, 1))} style={{ padding: "8px 12px", background: "transparent", border: "1px solid var(--border2)", color: "var(--muted)" }}>←</button>
-          <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "14px", color: "var(--text)" }}>
-            {activeMonth.toLocaleDateString("en-GB", { month: "long", year: "numeric" })}
+          <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "14px", color: "var(--text)", minWidth: "120px", textAlign: "center" }}>
+            {activeMonth.toLocaleDateString("en-GB", { month: "short", year: "numeric" }).toUpperCase()}
           </div>
           <button onClick={() => setActiveMonth(new Date(activeMonth.getFullYear(), activeMonth.getMonth() + 1, 1))} style={{ padding: "8px 12px", background: "transparent", border: "1px solid var(--border2)", color: "var(--muted)" }}>→</button>
         </div>
       </div>
 
-      <div style={{ fontFamily: "'DM Mono', monospace", color: "var(--muted)", fontSize: "13px", marginBottom: "16px" }}>
-        Bold days are workout days. Click any workout day to open full-detail editor modal.
+      <div style={{ fontFamily: "'DM Mono', monospace", color: "var(--muted)", fontSize: "12px", marginBottom: "16px" }}>
+        Bold days are workout days. Click any workout day to edit.
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: "8px", marginBottom: "8px" }}>
-        {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((d) => (
-          <div key={d} style={{ fontFamily: "'DM Mono', monospace", fontSize: "12px", color: "var(--muted)", textTransform: "uppercase", letterSpacing: "2px", padding: "4px 6px" }}>{d}</div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: "4px", marginBottom: "8px" }}>
+        {["M", "T", "W", "T", "F", "S", "S"].map((d, i) => (
+          <div key={i} style={{ fontFamily: "'DM Mono', monospace", fontSize: "11px", color: "var(--muted)", textTransform: "uppercase", letterSpacing: "1px", padding: "4px", textAlign: "center" }}>{d}</div>
         ))}
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: "8px" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: "4px" }}>
         {monthGrid.map((date) => {
           const key = ymd(date);
           const entry = scheduleByDate.get(key);
@@ -276,20 +276,34 @@ export default function CalendarPage() {
               onClick={() => entry && openEdit(entry, date)}
               disabled={!entry}
               style={{
-                minHeight: "88px",
+                minHeight: "clamp(60px, 10vh, 88px)",
                 textAlign: "left",
-                padding: "8px",
-                borderRadius: "4px",
+                padding: "6px",
+                borderRadius: "2px",
                 border: `1px solid ${isWorkout ? color : "var(--border)"}`,
                 background: inMonth ? "var(--surface)" : "#0d0d0d",
-                opacity: inMonth ? 1 : 0.6,
+                opacity: inMonth ? 1 : 0.4,
                 cursor: entry ? "pointer" : "default",
+                display: "flex",
+                flexDirection: "column",
+                overflow: "hidden"
               }}
             >
-              <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "12px", color: "var(--muted)" }}>{date.getDate()}</div>
+              <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "11px", color: "var(--muted)" }}>{date.getDate()}</div>
               {entry && (
-                <div style={{ marginTop: "6px", fontFamily: "'DM Mono', monospace", fontSize: "12px", color, fontWeight: isWorkout ? 800 : 500, letterSpacing: "0.5px" }}>
-                  {entry.day.name}
+                <div style={{ 
+                  marginTop: "4px", 
+                  fontFamily: "'DM Mono', monospace", 
+                  fontSize: "9px", 
+                  color, 
+                  fontWeight: isWorkout ? 800 : 500, 
+                  letterSpacing: "0.2px",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                  width: "100%"
+                }}>
+                  {entry.day.name.toUpperCase()}
                 </div>
               )}
             </button>

@@ -359,8 +359,8 @@ export default function ResultsPage() {
 
       {!empty && (
         <>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: "16px", marginBottom: "24px", alignItems: "start" }}>
-            <div className="results-grid-metrics" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", marginBottom: 0 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "16px", marginBottom: "24px", alignItems: "start" }}>
+            <div className="results-grid-metrics" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", marginBottom: 0, flex: 1 }}>
               {[
                 {
                   label: "Avg energy in / out",
@@ -385,7 +385,7 @@ export default function ResultsPage() {
               ))}
             </div>
 
-            <div className="results-metric-card results-card-glass" style={{ width: "220px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "16px" }}>
+            <div className="results-metric-card results-card-glass" style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "16px", minWidth: "220px" }}>
               <div className="mono" style={{ fontSize: "10px", color: "var(--muted)", marginBottom: "12px", letterSpacing: "0.14em", textTransform: "uppercase" }}>
                 Consistency Score
               </div>
@@ -404,13 +404,13 @@ export default function ResultsPage() {
             </div>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px", marginBottom: "22px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "16px", marginBottom: "22px" }}>
             {analysis.insights.length > 0 && (
               <div className="results-insight-panel" style={{ marginBottom: 0 }}>
                 <div className="mono" style={{ fontSize: "10px", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--accent)", marginBottom: "10px" }}>
                   Analysis
                 </div>
-                <ul style={{ margin: 0, paddingLeft: "18px", color: "var(--text2)", fontSize: "15px", lineHeight: 1.6 }}>
+                <ul style={{ margin: 0, paddingLeft: "18px", color: "var(--text2)", fontSize: "14px", lineHeight: 1.6 }}>
                   {analysis.insights.map((line, i) => (
                     <li key={i} style={{ marginBottom: i === analysis.insights.length - 1 ? 0 : "6px" }}>
                       {line}
@@ -422,8 +422,8 @@ export default function ResultsPage() {
 
             <div className="results-panel" style={{ padding: "14px 18px" }}>
               <div className="results-panel-title" style={{ marginBottom: "8px" }}>RPE Distribution (Intensity)</div>
-              <div style={{ fontSize: "13px", color: "var(--text2)", marginBottom: "12px", lineHeight: 1.4 }}>
-                Spread of effort across your logged sets. High peaks (8+) indicate proximity to failure.
+              <div style={{ fontSize: "12px", color: "var(--text2)", marginBottom: "12px", lineHeight: 1.4 }}>
+                Spread of effort across sets. High peaks (8+) indicate proximity to failure.
               </div>
               <div className="rpe-heatmap">
                 {analysis.rpeCounts.map((count, i) => {
@@ -447,7 +447,7 @@ export default function ResultsPage() {
               </div>
               <div style={{ display: "flex", justifyContent: "space-between", marginTop: "8px" }} className="mono">
                 {["Light", "Med", "High", "Peak", "Limit"].map((l, i) => (
-                  <span key={l} style={{ fontSize: "9px", color: "var(--muted)", textTransform: "uppercase" }}>{l}</span>
+                  <span key={l} style={{ fontSize: "8px", color: "var(--muted)", textTransform: "uppercase" }}>{l}</span>
                 ))}
               </div>
             </div>

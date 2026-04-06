@@ -108,10 +108,28 @@ export default function AICoach() {
       display: "flex",
       flexDirection: "column",
       height: "100%",
-      minHeight: "600px",
-      position: "sticky",
-      top: "56px",
-    }}>
+      minHeight: "500px",
+      position: "relative",
+    }} className="ai-coach-container">
+      <style>{`
+        @media (min-width: 901px) {
+          .ai-coach-container {
+            position: sticky !important;
+            top: 56px;
+            height: calc(100vh - 56px) !important;
+          }
+        }
+        @media (max-width: 900px) {
+          .ai-coach-container {
+            width: 100% !important;
+            height: auto !important;
+            min-height: 400px;
+            border-top: 1px solid var(--border);
+            margin-top: 40px;
+            padding-bottom: 80px;
+          }
+        }
+      `}</style>
       {/* Header */}
       <div style={{
         padding: "24px 28px 20px",
@@ -133,12 +151,12 @@ export default function AICoach() {
         }}>
           ⚡
         </div>
-        <div>
+        <div style={{ flex: 1 }}>
           <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "18px", letterSpacing: "2px", color: "var(--accent)" }}>
             AI COACH
           </div>
           <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "15px", letterSpacing: "2px", textTransform: "uppercase", color: "var(--muted)" }}>
-            Claude Opus · Knows your programme
+            OpenAI Integrated · Knows your programme in and out
           </div>
         </div>
       </div>
