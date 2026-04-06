@@ -63,7 +63,7 @@ export default function TrackerPage() {
         setWorkouts(data);
         // Set default selected exercise if not set
         if (!selectedExercise && data.length > 0) {
-          const allExNames = data.flatMap(w => w.exercises.map(e => e.name));
+          const allExNames = data.flatMap((w: Workout) => w.exercises.map((e: WorkoutExercise) => e.name));
           if (allExNames.length > 0) {
             setSelectedExercise(allExNames[0]);
           }
