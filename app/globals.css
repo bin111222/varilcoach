@@ -51,6 +51,11 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
+  
+  /* Make it feel like an app */
+  user-select: none;
+  -webkit-touch-callout: none;
+  overscroll-behavior-y: contain; /* Prevents pull-to-refresh */
 }
 
 body::before {
