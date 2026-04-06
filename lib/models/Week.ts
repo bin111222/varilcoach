@@ -110,7 +110,7 @@ const DaySchema = new Schema<IDay>({
 
 const WeekSchema = new Schema<IWeek>(
   {
-    userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    userId: { type: Schema.Types.ObjectId as any, ref: "User", required: true },
     number: { type: Number, required: true },
     subtitle: {
       type: String,
