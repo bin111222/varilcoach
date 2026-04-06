@@ -16,7 +16,7 @@ export interface ISettings {
 
 const SettingsSchema = new Schema<ISettings>(
   {
-    userId: { type: Schema.Types.ObjectId, ref: "User", required: true, unique: true },
+    userId: { type: Schema.Types.ObjectId as any, ref: "User", required: true, unique: true },
     athleteName: { type: String, default: "Varil" },
     goals: [{ type: String }],
     injuries: { type: String, default: "" },
