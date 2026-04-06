@@ -27,7 +27,13 @@ function ProgramContent() {
   const dayParam = searchParams.get("day");
 
   useEffect(() => {
-    fetch("/api/weeks")
+    const userId = localStorage.getItem("userId");
+    if (!userId) {
+      setLoading(false);
+      return;
+    }
+
+    fetch(`/api/weeks?userId=${userId}`)
       .then(r => r.json())
       .then(data => {
         if (Array.isArray(data) && data.length > 0) {
@@ -40,7 +46,19 @@ function ProgramContent() {
         setLoading(false);
       })
       .catch(() => setLoading(false));
-  }, []);
+  }, [weekParam, dayParam]);
+
+  async function handleSeed() {
+    const userId = localStorage.getItem("userId");
+    if (!userId) return;
+    setLoading(true);
+    await fetch("/api/seed", { 
+      method: "POST", 
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userId })
+    });
+    window.location.reload();
+  }
 
   function switchWeek(num: number) {
     const found = weeks.find(w => w.number === num);
@@ -70,7 +88,10 @@ function ProgramContent() {
     return (
       <div style={{ padding: "60px 48px", fontFamily: "'DM Mono', monospace", color: "var(--muted)" }}>
         No programme found.{" "}
-        <button onClick={async () => { await fetch("/api/seed", { method: "POST" }); window.location.reload(); }} style={{ color: "var(--accent)", background: "none", border: "none", cursor: "pointer", fontFamily: "'DM Mono', monospace", textDecoration: "underline" }}>
+        <button 
+          onClick={handleSeed} 
+          style={{ color: "var(--accent)", background: "none", border: "none", cursor: "pointer", fontFamily: "'DM Mono', monospace", textDecoration: "underline" }}
+        >
           Seed data
         </button>
       </div>

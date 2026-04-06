@@ -1,12 +1,25 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
 
 export default function Navbar() {
   const path = usePathname();
+  const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [username, setUsername] = useState<string | null>(null);
+
+  useEffect(() => {
+    setUsername(localStorage.getItem("username"));
+  }, [path]);
+
+  const handleLogout = async () => {
+    await fetch("/api/auth/logout", { method: "POST" });
+    localStorage.removeItem("userId");
+    localStorage.removeItem("username");
+    router.push("/login");
+  };
 
   const links = [
     { href: "/", label: "Dashboard" },
@@ -16,6 +29,8 @@ export default function Navbar() {
     { href: "/results", label: "Results" },
     { href: "/admin", label: "Admin" },
   ];
+
+  if (path === "/login" || path === "/onboarding") return null;
 
   return (
     <>
@@ -52,7 +67,7 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop nav */}
-        <div style={{ display: "flex", gap: "4px", flex: 1 }} className="desktop-nav">
+        <div style={{ display: "flex", gap: "4px", flex: 1, alignItems: "center" }} className="desktop-nav">
           {links.map((l) => {
             const active = l.href === "/" ? path === "/" : path.startsWith(l.href);
             return (
@@ -76,6 +91,41 @@ export default function Navbar() {
               </Link>
             );
           })}
+
+          <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: "16px" }}>
+            <span style={{
+              fontFamily: "'DM Mono', monospace",
+              fontSize: "10px",
+              letterSpacing: "2px",
+              textTransform: "uppercase",
+              color: "var(--accent)",
+              borderLeft: "1px solid #333",
+              paddingLeft: "16px"
+            }}>
+              {username}
+            </span>
+            <button
+              onClick={handleLogout}
+              style={{
+                fontFamily: "'DM Mono', monospace",
+                fontSize: "10px",
+                letterSpacing: "2px",
+                textTransform: "uppercase",
+                color: "var(--muted)",
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                padding: "6px 12px",
+                borderRadius: "2px",
+                transition: "all 0.15s",
+                border: "1px solid #333",
+              }}
+              onMouseEnter={(e) => (e.target as HTMLButtonElement).style.borderColor = "var(--run)"}
+              onMouseLeave={(e) => (e.target as HTMLButtonElement).style.borderColor = "#333"}
+            >
+              Logout
+            </button>
+          </div>
         </div>
 
         {/* Mobile toggle */}
@@ -128,6 +178,25 @@ export default function Navbar() {
               {l.label}
             </Link>
           ))}
+          <div style={{ marginTop: "auto", paddingTop: "24px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "12px", color: "var(--accent)", letterSpacing: "2px" }}>{username}</span>
+            <button
+              onClick={handleLogout}
+              style={{
+                fontFamily: "'DM Mono', monospace",
+                fontSize: "12px",
+                letterSpacing: "2px",
+                textTransform: "uppercase",
+                color: "var(--run)",
+                background: "none",
+                border: "1px solid var(--run)",
+                padding: "8px 16px",
+                borderRadius: "2px"
+              }}
+            >
+              Logout
+            </button>
+          </div>
         </div>
       )}
 

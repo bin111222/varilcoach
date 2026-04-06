@@ -47,6 +47,7 @@ export interface IDay {
 
 export interface IWeek {
   _id: string;
+  userId: string;
   number: number;
   subtitle: string;
   priorityStack: string[];
@@ -109,7 +110,8 @@ const DaySchema = new Schema<IDay>({
 
 const WeekSchema = new Schema<IWeek>(
   {
-    number: { type: Number, required: true, unique: true },
+    userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    number: { type: Number, required: true },
     subtitle: {
       type: String,
       default: "Training Programme — Calisthenics / Swim / Run / MMA",
@@ -122,5 +124,7 @@ const WeekSchema = new Schema<IWeek>(
   },
   { timestamps: true }
 );
+
+WeekSchema.index({ userId: 1, number: 1 }, { unique: true });
 
 export const Week = models.Week || model<IWeek>("Week", WeekSchema);

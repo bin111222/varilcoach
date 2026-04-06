@@ -14,6 +14,7 @@ export interface IExerciseLog {
 
 export interface IProgress {
   _id: string;
+  userId: string;
   date: Date;
   weekNumber: number;
   dayId: string;
@@ -40,6 +41,7 @@ const ExerciseLogSchema = new Schema<IExerciseLog>({
 
 const ProgressSchema = new Schema<IProgress>(
   {
+    userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
     date: { type: Date, default: Date.now },
     weekNumber: { type: Number, required: true },
     dayId: { type: String, required: true },

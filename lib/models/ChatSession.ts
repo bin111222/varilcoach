@@ -8,6 +8,7 @@ export interface IChatMessage {
 
 export interface IChatSession {
   sessionId: string;
+  userId: string;
   messages: IChatMessage[];
 }
 
@@ -23,6 +24,7 @@ const ChatMessageSchema = new Schema<IChatMessage>(
 const ChatSessionSchema = new Schema<IChatSession>(
   {
     sessionId: { type: String, required: true, unique: true, index: true },
+    userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
     messages: { type: [ChatMessageSchema], default: [] },
   },
   { timestamps: true }

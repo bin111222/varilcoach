@@ -67,13 +67,20 @@ function sanitizeWeekPayload(body: any) {
 }
 
 export async function GET(
-  _req: Request,
+  req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await connectDB();
     const { id } = await params;
-    const week = await Week.findOne({ number: Number(id) }).lean();
+    const { searchParams } = new URL(req.url);
+    const userId = searchParams.get("userId");
+
+    if (!userId) {
+      return NextResponse.json({ error: "No userId provided" }, { status: 400 });
+    }
+
+    const week = await Week.findOne({ number: Number(id), userId }).lean();
     if (!week) return NextResponse.json({ error: "Not found" }, { status: 404 });
     return NextResponse.json(week);
   } catch (err) {
@@ -88,8 +95,15 @@ export async function PUT(
   try {
     await connectDB();
     const { id } = await params;
-    const body = sanitizeWeekPayload(await req.json());
-    const week = await Week.findOne({ number: Number(id) });
+    const data = await req.json();
+    const { userId, ...bodyData } = data;
+
+    if (!userId) {
+      return NextResponse.json({ error: "No userId provided" }, { status: 400 });
+    }
+
+    const body = sanitizeWeekPayload(bodyData);
+    const week = await Week.findOne({ number: Number(id), userId });
     if (!week) return NextResponse.json({ error: "Not found" }, { status: 404 });
     week.subtitle = body.subtitle;
     week.priorityStack = body.priorityStack;
@@ -106,13 +120,20 @@ export async function PUT(
 }
 
 export async function DELETE(
-  _req: Request,
+  req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await connectDB();
     const { id } = await params;
-    await Week.findOneAndDelete({ number: Number(id) });
+    const { searchParams } = new URL(req.url);
+    const userId = searchParams.get("userId");
+
+    if (!userId) {
+      return NextResponse.json({ error: "No userId provided" }, { status: 400 });
+    }
+
+    await Week.findOneAndDelete({ number: Number(id), userId });
     return NextResponse.json({ ok: true });
   } catch (err) {
     return NextResponse.json({ error: String(err) }, { status: 500 });

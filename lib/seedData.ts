@@ -783,7 +783,7 @@ function tweakSetsString(sets: string, weekNumber: number) {
     .replace(/(\d+)\s*×\s*max–1/gi, "3 × max–1"); // stable
 }
 
-function generateWeekFromBase(base: AnyWeek, weekNumber: number, baseWeekNumber: number) {
+export function generateWeekFromBase(base: AnyWeek, weekNumber: number, baseWeekNumber: number) {
   const w = deepClone(base) as any;
   w.number = weekNumber;
   const variantIdx = (weekNumber - 1) % 4;

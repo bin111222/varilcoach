@@ -8,20 +8,44 @@ import {
   generateWeeks16,
 } from "@/lib/seedData";
 
-export async function POST() {
+export async function POST(req: Request) {
   try {
+    const text = await req.text();
+    if (!text) {
+      return NextResponse.json({ error: "Empty request body" }, { status: 400 });
+    }
+    const { userId } = JSON.parse(text);
+    if (!userId) {
+      return NextResponse.json({ error: "userId required" }, { status: 400 });
+    }
+
     await connectDB();
 
-    const weeks = generateWeeks16();
-    const progress = generateProgressLogsForWeeks(weeks);
+    // Force sync indexes to fix the legacy unique 'number' index
+    try {
+      await Week.syncIndexes();
+    } catch (e) {
+      console.warn("syncIndexes failed in seed:", e);
+      try { await Week.collection.dropIndex("number_1"); } catch (d) {}
+    }
 
-    await Promise.all([Week.deleteMany({}), Progress.deleteMany({})]);
+    const weeksRaw = generateWeeks16();
+    const progressRaw = generateProgressLogsForWeeks(weeksRaw);
+
+    const weeks = weeksRaw.map(w => ({ ...w, userId }));
+    const progress = progressRaw.map(p => ({ ...p, userId }));
+
+    await Promise.all([
+      Week.deleteMany({ userId }),
+      Progress.deleteMany({ userId })
+    ]);
     await Week.insertMany(weeks);
     await Progress.insertMany(progress);
 
-    const existing = await Settings.findOne();
+    const existing = await Settings.findOne({ userId });
     if (!existing) {
       await Settings.create({
+        userId,
         athleteName: "Varil",
         goals: [
           "Master muscle-up → weighted muscle-up",

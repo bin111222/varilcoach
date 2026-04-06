@@ -52,10 +52,17 @@ function sanitizeWeekPayload(body: any) {
   };
 }
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
     await connectDB();
-    const weeks = await Week.find().sort({ number: 1 }).lean();
+    const { searchParams } = new URL(req.url);
+    const userId = searchParams.get("userId");
+
+    if (!userId) {
+      return NextResponse.json({ error: "No userId provided" }, { status: 400 });
+    }
+
+    const weeks = await Week.find({ userId }).sort({ number: 1 }).lean();
     return NextResponse.json(weeks);
   } catch (err) {
     return NextResponse.json({ error: String(err) }, { status: 500 });
@@ -65,8 +72,15 @@ export async function GET() {
 export async function POST(req: Request) {
   try {
     await connectDB();
-    const body = sanitizeWeekPayload(await req.json());
-    const week = await Week.create(body);
+    const data = await req.json();
+    const { userId, ...body } = data;
+
+    if (!userId) {
+      return NextResponse.json({ error: "No userId provided" }, { status: 400 });
+    }
+
+    const sanitized = sanitizeWeekPayload(body);
+    const week = await Week.create({ ...sanitized, userId });
     return NextResponse.json(week, { status: 201 });
   } catch (err) {
     return NextResponse.json({ error: String(err) }, { status: 500 });

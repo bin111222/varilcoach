@@ -688,11 +688,17 @@ export default function AdminPage() {
   const confirmResolver = useRef<((v: boolean) => void) | null>(null);
 
   useEffect(() => {
+    const userId = localStorage.getItem("userId");
+    if (!userId) {
+      setLoading(false);
+      return;
+    }
+
     async function load() {
       try {
         const [w, s] = await Promise.all([
-          fetchJsonWithTimeout("/api/weeks"),
-          fetchJsonWithTimeout("/api/settings"),
+          fetchJsonWithTimeout(`/api/weeks?userId=${userId}`),
+          fetchJsonWithTimeout(`/api/settings?userId=${userId}`),
         ]);
         setWeeks(Array.isArray(w) ? w : []);
         setSettings(s);
@@ -707,23 +713,30 @@ export default function AdminPage() {
   }, []);
 
   async function saveWeek(updated: any) {
-    await fetch(`/api/weeks/${updated.number}`, {
+    const userId = localStorage.getItem("userId");
+    if (!userId) return;
+    await fetch(`/api/weeks/${updated.number}?userId=${userId}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(updated),
+      body: JSON.stringify({ ...updated, userId }),
     });
     setWeeks(prev => prev.map(w => w.number === updated.number ? updated : w));
   }
 
   async function deleteWeek(number: number) {
-    await fetch(`/api/weeks/${number}`, { method: "DELETE" });
+    const userId = localStorage.getItem("userId");
+    if (!userId) return;
+    await fetch(`/api/weeks/${number}?userId=${userId}`, { method: "DELETE" });
     setWeeks(prev => prev.filter(w => w.number !== number));
     setActiveWeekNum(null);
   }
 
   async function addWeek() {
+    const userId = localStorage.getItem("userId");
+    if (!userId) return;
     const maxNum = weeks.reduce((m, w) => Math.max(m, w.number), 0);
     const newWeek = {
+      userId,
       number: maxNum + 1,
       subtitle: "Training Programme — Calisthenics / Swim / Run / MMA",
       priorityStack: [],
@@ -751,10 +764,12 @@ export default function AdminPage() {
   }
 
   async function saveSettings(updated: any) {
+    const userId = localStorage.getItem("userId");
+    if (!userId) return;
     await fetch("/api/settings", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(updated),
+      body: JSON.stringify({ ...updated, userId }),
     });
     setSettings(updated);
   }
@@ -821,9 +836,15 @@ export default function AdminPage() {
   }, [hasUnsaved]);
 
   async function seed() {
+    const userId = localStorage.getItem("userId");
+    if (!userId) return;
     setSeeding(true);
-    await fetch("/api/seed", { method: "POST" });
-    const w = await fetch("/api/weeks").then(r => r.json());
+    await fetch("/api/seed", { 
+      method: "POST", 
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userId })
+    });
+    const w = await fetch(`/api/weeks?userId=${userId}`).then(r => r.json());
     setWeeks(Array.isArray(w) ? w : []);
     if (Array.isArray(w) && w.length > 0) setActiveWeekNum(w[0].number);
     setSeeding(false);
@@ -1011,14 +1032,21 @@ function DataTab() {
   });
 
   useEffect(() => {
-    fetch("/api/progress").then(r => r.json()).then(data => {
+    const userId = localStorage.getItem("userId");
+    if (!userId) {
+      setLoading(false);
+      return;
+    }
+    fetch(`/api/progress?userId=${userId}`).then(r => r.json()).then(data => {
       setProgress(Array.isArray(data) ? data : []);
       setLoading(false);
     });
   }, []);
 
   async function deleteLog(id: string) {
-    await fetch(`/api/progress?id=${id}`, { method: "DELETE" });
+    const userId = localStorage.getItem("userId");
+    if (!userId) return;
+    await fetch(`/api/progress?id=${id}&userId=${userId}`, { method: "DELETE" });
     setProgress(prev => prev.filter(p => p._id !== id));
   }
 
@@ -1033,10 +1061,12 @@ function DataTab() {
   }
 
   async function saveEdit(id: string) {
-    const res = await fetch(`/api/progress?id=${id}`, {
+    const userId = localStorage.getItem("userId");
+    if (!userId) return;
+    const res = await fetch(`/api/progress?id=${id}&userId=${userId}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(editForm),
+      body: JSON.stringify({ ...editForm, userId }),
     });
     const updated = await res.json();
     if (res.ok && updated?._id) {

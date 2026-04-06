@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import AICoach from "@/components/AICoach";
 
 const TYPE_COLORS: Record<string, string> = {
@@ -71,6 +72,8 @@ async function fetchJsonWithTimeout(url: string, timeoutMs = 12000) {
 }
 
 export default function Dashboard() {
+  const [userId, setUserId] = useState<string | null>(null);
+  const [username, setUsername] = useState<string | null>(null);
   const [settings, setSettings] = useState<any>(null);
   const [week, setWeek] = useState<any>(null);
   const [recentProgress, setRecentProgress] = useState<any[]>([]);
@@ -87,14 +90,21 @@ export default function Dashboard() {
   const [saved, setSaved] = useState(false);
   const [loggedExercises, setLoggedExercises] = useState<LoggedExercise[]>([]);
 
+  const router = useRouter();
   const todayId = JS_DAY_MAP[new Date().getDay()];
 
   useEffect(() => {
-    async function load() {
+    const id = localStorage.getItem("userId");
+    const name = localStorage.getItem("username");
+    if (!id) return;
+    setUserId(id);
+    setUsername(name);
+
+    async function load(uid: string) {
       try {
         const [s, p] = await Promise.all([
-          fetchJsonWithTimeout("/api/settings"),
-          fetchJsonWithTimeout("/api/progress"),
+          fetchJsonWithTimeout(`/api/settings?userId=${uid}`),
+          fetchJsonWithTimeout(`/api/progress?userId=${uid}`),
         ]);
         if (s.error) {
           setDbError(s.error);
@@ -103,7 +113,7 @@ export default function Dashboard() {
         }
         setSettings(s);
 
-        const w = await fetchJsonWithTimeout(`/api/weeks/${s.currentWeek ?? 1}`);
+        const w = await fetchJsonWithTimeout(`/api/weeks/${s.currentWeek ?? 1}?userId=${uid}`);
         setWeek(w);
 
         setRecentProgress(Array.isArray(p) ? p.slice(0, 5) : []);
@@ -115,19 +125,20 @@ export default function Dashboard() {
         setLoading(false);
       }
     }
-    load();
-  }, []);
+    load(id);
+  }, [router]);
 
   const todaySession = week?.days?.find((d: any) => d.id === todayId);
   const currentWeekNum = settings?.currentWeek ?? 1;
 
   async function logSession() {
-    if (!todaySession) return;
+    if (!todaySession || !userId) return;
     setSaving(true);
     await fetch("/api/progress", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
+        userId,
         weekNumber: currentWeekNum,
         dayId: todaySession.id,
         dayName: todaySession.name,
@@ -140,7 +151,7 @@ export default function Dashboard() {
     setSaved(true);
     setLogOpen(false);
     setTimeout(() => setSaved(false), 3000);
-    const pRes = await fetch("/api/progress");
+    const pRes = await fetch(`/api/progress?userId=${userId}`);
     const p = await pRes.json();
     setRecentProgress(Array.isArray(p) ? p.slice(0, 5) : []);
   }
@@ -213,7 +224,12 @@ export default function Dashboard() {
           <span>No programme data found.</span>
           <button
             onClick={async () => {
-              await fetch("/api/seed", { method: "POST" });
+              if (!userId) return;
+              await fetch("/api/seed", { 
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ userId })
+              });
               window.location.reload();
             }}
             style={{

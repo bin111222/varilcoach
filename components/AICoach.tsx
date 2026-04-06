@@ -24,10 +24,14 @@ export default function AICoach() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [sessionId, setSessionId] = useState<string>("");
+  const [userId, setUserId] = useState<string | null>(null);
   const messagesScrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
+    const uid = localStorage.getItem("userId");
+    setUserId(uid);
+
     const KEY = "aiCoachSessionId";
     const existing = localStorage.getItem(KEY);
     if (existing) {
@@ -40,20 +44,32 @@ export default function AICoach() {
         : `sess_${Date.now()}_${Math.random().toString(16).slice(2)}`;
     localStorage.setItem(KEY, id);
     setSessionId(id);
+
+    async function loadHistory() {
+      if (!uid) return;
+      try {
+        const res = await fetch(`/api/chat/history?sessionId=${id}&userId=${uid}`);
+        const data = await res.json();
+        if (data.messages && Array.isArray(data.messages)) {
+          setMessages(data.messages);
+        }
+      } catch (err) {
+        console.error("Failed to load chat history", err);
+      }
+    }
+    loadHistory();
   }, []);
 
   useEffect(() => {
     const el = messagesScrollRef.current;
     if (!el) return;
-    // scrollIntoView on inner content scrolls the window on first paint; only
-    // scroll the chat panel, and only once there is an active thread.
     if (messages.length === 0 && !loading) return;
     el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
   }, [messages, loading]);
 
   async function send(text?: string) {
     const content = text ?? input.trim();
-    if (!content || loading) return;
+    if (!content || loading || !userId) return;
 
     const newMessages: Message[] = [...messages, { role: "user", content }];
     setMessages(newMessages);
@@ -65,7 +81,7 @@ export default function AICoach() {
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: newMessages, sessionId }),
+        body: JSON.stringify({ messages: newMessages, sessionId, userId }),
       });
       const data = await res.json();
       if (data.error) {

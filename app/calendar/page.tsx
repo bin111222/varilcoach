@@ -68,7 +68,15 @@ export default function CalendarPage() {
   const confirmResolver = useRef<((v: boolean) => void) | null>(null);
 
   useEffect(() => {
-    Promise.all([fetchJsonWithTimeout("/api/weeks"), fetchJsonWithTimeout("/api/settings")])
+    const userId = localStorage.getItem("userId");
+    if (!userId) {
+      setLoading(false);
+      return;
+    }
+    Promise.all([
+      fetchJsonWithTimeout(`/api/weeks?userId=${userId}`),
+      fetchJsonWithTimeout(`/api/settings?userId=${userId}`)
+    ])
       .then(([w, s]) => {
         setWeeks(Array.isArray(w) ? w : []);
         setSettings(s);
@@ -105,15 +113,17 @@ export default function CalendarPage() {
   }
 
   async function saveModal() {
-    if (!modalData || !draft) return;
+    const userId = localStorage.getItem("userId");
+    if (!modalData || !draft || !userId) return;
     const updatedWeek = weeks.find((w) => w.number === modalData.weekNumber);
     if (!updatedWeek) return;
     const finalWeek = {
       ...updatedWeek,
+      userId,
       days: updatedWeek.days.map((d: any) => (d.id === modalData.dayId ? { ...draft } : d)),
     };
     setSaving(true);
-    const res = await fetch(`/api/weeks/${modalData.weekNumber}`, {
+    const res = await fetch(`/api/weeks/${modalData.weekNumber}?userId=${userId}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(finalWeek),

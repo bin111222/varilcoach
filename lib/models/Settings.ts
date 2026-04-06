@@ -2,6 +2,7 @@ import mongoose, { Schema, model, models } from "mongoose";
 
 export interface ISettings {
   _id: string;
+  userId: string;
   athleteName: string;
   goals: string[];
   injuries: string;
@@ -15,6 +16,7 @@ export interface ISettings {
 
 const SettingsSchema = new Schema<ISettings>(
   {
+    userId: { type: Schema.Types.ObjectId, ref: "User", required: true, unique: true },
     athleteName: { type: String, default: "Varil" },
     goals: [{ type: String }],
     injuries: { type: String, default: "" },

@@ -9,8 +9,10 @@ export function middleware(req: NextRequest) {
   if (
     pathname.startsWith("/_next") ||
     pathname.startsWith("/favicon") ||
-    pathname.startsWith("/api/unlock") ||
-    pathname === "/unlock"
+    pathname.startsWith("/api/auth") ||
+    pathname.startsWith("/api/onboarding") ||
+    pathname === "/login" ||
+    pathname === "/onboarding"
   ) {
     return NextResponse.next();
   }
@@ -19,7 +21,7 @@ export function middleware(req: NextRequest) {
   if (unlocked) return NextResponse.next();
 
   const url = req.nextUrl.clone();
-  url.pathname = "/unlock";
+  url.pathname = "/login";
   url.searchParams.set("next", pathname);
   return NextResponse.redirect(url);
 }

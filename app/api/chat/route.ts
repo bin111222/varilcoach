@@ -8,7 +8,11 @@ import { ChatSession } from "@/lib/models/ChatSession";
 
 export async function POST(req: Request) {
   try {
-    const { messages, sessionId } = await req.json();
+    const { messages, sessionId, userId } = await req.json();
+
+    if (!userId) {
+      return NextResponse.json({ error: "userId required" }, { status: 400 });
+    }
 
     const apiKey = process.env.OPENAI_API_KEY;
     if (!apiKey) {
@@ -19,10 +23,10 @@ export async function POST(req: Request) {
     }
 
     await connectDB();
-    const settings = (await Settings.findOne().lean()) as any;
+    const settings = (await Settings.findOne({ userId }).lean()) as any;
     const currentWeek = settings?.currentWeek ?? 1;
-    const weekData = (await Week.findOne({ number: currentWeek }).lean()) as any;
-    const recentProgress = await Progress.find().sort({ date: -1 }).limit(10).lean();
+    const weekData = (await Week.findOne({ number: currentWeek, userId }).lean()) as any;
+    const recentProgress = await Progress.find({ userId }).sort({ date: -1 }).limit(10).lean();
 
     const athleteName = settings?.athleteName ?? "Varil";
     const goals = settings?.goals ?? [];
@@ -121,7 +125,7 @@ COACHING STYLE:
           ? String(messages[messages.length - 1]?.content ?? "")
           : "";
       await ChatSession.findOneAndUpdate(
-        { sessionId },
+        { sessionId, userId },
         {
           $push: {
             messages: {
