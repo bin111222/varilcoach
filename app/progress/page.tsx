@@ -8,6 +8,17 @@ const TYPE_COLORS: Record<string, string> = {
   swim: "var(--swim)", mma: "var(--mma)", rest: "var(--rest)", legs: "var(--legs)",
 };
 
+async function fetchJsonWithTimeout(url: string, timeoutMs = 12000) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const res = await fetch(url, { signal: controller.signal, cache: "no-store" });
+    return await res.json();
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 export default function ProgressPage() {
   const [logs, setLogs] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -15,6 +26,7 @@ export default function ProgressPage() {
   const [filterType, setFilterType] = useState<string>("");
   const [editingId, setEditingId] = useState<string | null>(null);
   const [savingId, setSavingId] = useState<string | null>(null);
+  const [loadError, setLoadError] = useState("");
   const [editForm, setEditForm] = useState({
     energyIn: 7,
     energyOut: 7,
@@ -23,10 +35,13 @@ export default function ProgressPage() {
   });
 
   useEffect(() => {
-    fetch("/api/progress")
-      .then(r => r.json())
+    fetchJsonWithTimeout("/api/progress")
       .then(data => {
         setLogs(Array.isArray(data) ? data : []);
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoadError("Progress logs failed to load. Refresh to retry.");
         setLoading(false);
       });
   }, []);
@@ -126,7 +141,16 @@ export default function ProgressPage() {
         </div>
 
         {loading ? (
-          <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "15px", color: "var(--muted)", letterSpacing: "2px" }}>LOADING...</div>
+          <div className="loading-stack" style={{ maxWidth: "520px" }}>
+            <div className="loading-label">Loading Progress</div>
+            <div className="loading-track">
+              <div className="loading-bar" />
+            </div>
+          </div>
+        ) : loadError ? (
+          <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "14px", color: "var(--run)", letterSpacing: "1px" }}>
+            {loadError}
+          </div>
         ) : filtered.length === 0 ? (
           <div style={{ textAlign: "center", padding: "60px 0" }}>
             <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "64px", color: "#1e1e1e", letterSpacing: "4px", marginBottom: "16px" }}>EMPTY</div>

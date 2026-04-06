@@ -25,6 +25,17 @@ const JS_DAY_MAP: Record<number, string> = {
   6: "sat",
 };
 
+async function fetchJsonWithTimeout(url: string, timeoutMs = 12000) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const res = await fetch(url, { signal: controller.signal, cache: "no-store" });
+    return await res.json();
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 export default function Dashboard() {
   const [settings, setSettings] = useState<any>(null);
   const [week, setWeek] = useState<any>(null);
@@ -46,22 +57,25 @@ export default function Dashboard() {
   useEffect(() => {
     async function load() {
       try {
-        const [sRes, pRes] = await Promise.all([
-          fetch("/api/settings"),
-          fetch("/api/progress"),
+        const [s, p] = await Promise.all([
+          fetchJsonWithTimeout("/api/settings"),
+          fetchJsonWithTimeout("/api/progress"),
         ]);
-        const s = await sRes.json();
-        if (s.error) { setDbError(s.error); setLoading(false); return; }
+        if (s.error) {
+          setDbError(s.error);
+          setLoading(false);
+          return;
+        }
         setSettings(s);
 
-        const wRes = await fetch(`/api/weeks/${s.currentWeek ?? 1}`);
-        const w = await wRes.json();
+        const w = await fetchJsonWithTimeout(`/api/weeks/${s.currentWeek ?? 1}`);
         setWeek(w);
 
-        const p = await pRes.json();
         setRecentProgress(Array.isArray(p) ? p.slice(0, 5) : []);
       } catch (e) {
-        setDbError("Failed to connect. Check your MONGODB_URI in .env.local");
+        setDbError(
+          "Loading timed out. Please refresh. If this keeps happening, check Vercel env vars and MongoDB Atlas network access."
+        );
       } finally {
         setLoading(false);
       }
@@ -98,17 +112,13 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        height: "calc(100vh - 56px)",
-        color: "var(--muted)",
-        fontFamily: "'DM Mono', monospace",
-        fontSize: "15px",
-        letterSpacing: "2px",
-      }}>
-        LOADING...
+      <div className="loading-screen">
+        <div className="loading-stack">
+          <div className="loading-label">Loading Dashboard</div>
+          <div className="loading-track">
+            <div className="loading-bar" />
+          </div>
+        </div>
       </div>
     );
   }

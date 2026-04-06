@@ -9,6 +9,17 @@ const TYPE_COLORS: Record<string, string> = {
 
 const TYPES = ["pull", "push", "legs", "swim", "run", "mma", "rest"] as const;
 
+async function fetchJsonWithTimeout(url: string, timeoutMs = 12000) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const res = await fetch(url, { signal: controller.signal, cache: "no-store" });
+    return await res.json();
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div style={{ marginBottom: "40px" }}>
@@ -583,17 +594,25 @@ export default function AdminPage() {
   const [activeWeekNum, setActiveWeekNum] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [seeding, setSeeding] = useState(false);
+  const [loadError, setLoadError] = useState("");
 
   useEffect(() => {
-    Promise.all([
-      fetch("/api/weeks").then(r => r.json()),
-      fetch("/api/settings").then(r => r.json()),
-    ]).then(([w, s]) => {
-      setWeeks(Array.isArray(w) ? w : []);
-      setSettings(s);
-      if (Array.isArray(w) && w.length > 0) setActiveWeekNum(w[0].number);
-      setLoading(false);
-    });
+    async function load() {
+      try {
+        const [w, s] = await Promise.all([
+          fetchJsonWithTimeout("/api/weeks"),
+          fetchJsonWithTimeout("/api/settings"),
+        ]);
+        setWeeks(Array.isArray(w) ? w : []);
+        setSettings(s);
+        if (Array.isArray(w) && w.length > 0) setActiveWeekNum(w[0].number);
+      } catch {
+        setLoadError("Admin data failed to load. Refresh to retry.");
+      } finally {
+        setLoading(false);
+      }
+    }
+    load();
   }, []);
 
   async function saveWeek(updated: any) {
@@ -660,8 +679,21 @@ export default function AdminPage() {
 
   if (loading) {
     return (
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "calc(100vh - 56px)", color: "var(--muted)", fontFamily: "'DM Mono', monospace", fontSize: "15px", letterSpacing: "2px" }}>
-        LOADING...
+      <div className="loading-screen">
+        <div className="loading-stack">
+          <div className="loading-label">Loading Admin</div>
+          <div className="loading-track">
+            <div className="loading-bar" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (loadError) {
+    return (
+      <div style={{ padding: "48px var(--page-pad)", color: "var(--run)", fontFamily: "'DM Mono', monospace", fontSize: "14px" }}>
+        {loadError}
       </div>
     );
   }

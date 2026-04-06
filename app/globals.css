@@ -204,6 +204,49 @@ input:focus, textarea:focus, select:focus {
   animation: fadeInUp 0.3s ease;
 }
 
+.loading-screen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: calc(100vh - 56px);
+  padding: 24px;
+}
+
+.loading-stack {
+  width: min(420px, 80vw);
+}
+
+.loading-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  letter-spacing: 3px;
+  color: var(--muted);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+.loading-track {
+  width: 100%;
+  height: 8px;
+  background: #121212;
+  border: 1px solid var(--border2);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.loading-bar {
+  width: 35%;
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  border-radius: 999px;
+  animation: loadingSlide 1.2s ease-in-out infinite;
+}
+
+@keyframes loadingSlide {
+  0% { transform: translateX(-120%); }
+  100% { transform: translateX(320%); }
+}
+
 @media (max-width: 900px) {
   :root {
     --page-pad: 18px;
